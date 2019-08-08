@@ -159,3 +159,15 @@ int Shader::GetUniformLocation(const std::string& name)
 		//_UniformLocationCache[name] = location; 
 	return location;
 }
+
+
+Shader* Shader::GetDepthOnlyShader()
+{
+	static Shader shaderObject("res/shaders/DepthOnly.shader");
+	return &shaderObject;
+}
+
+void Shader::PrepareForDraw()
+{
+	//no work needed to be done for Base Shader		
+}

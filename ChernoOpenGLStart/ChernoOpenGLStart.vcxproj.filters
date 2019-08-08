@@ -62,6 +62,9 @@
     <ClCompile Include="RenderObject.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="BaseLightShader.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <None Include="res\shaders\Basic.shader">
@@ -74,6 +77,9 @@
       <Filter>res\shaders</Filter>
     </None>
     <None Include="res\shaders\Lamp.shader">
+      <Filter>res\shaders</Filter>
+    </None>
+    <None Include="res\shaders\DepthOnly.shader">
       <Filter>res\shaders</Filter>
     </None>
   </ItemGroup>
@@ -109,6 +115,9 @@
       <Filter>Header Files\StlData</Filter>
     </ClInclude>
     <ClInclude Include="RenderObject.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="BaseLightShader.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>

@@ -4,6 +4,12 @@
 #include "IndexBuffer.h"
 #include "Shader.h"
 
+enum class GlobalShaderState : uint8_t
+{
+	NORMAL,
+	DEPTH_ONLY
+};
+
 
 #define ASSERT(x) if(!(x)) __debugbreak();
 
@@ -17,9 +23,10 @@ bool GLLogError(const char* function, const char* file, int line);
 class Renderer
 {
 private:
-
+	static void Draw_Internal(VertexArray& va, unsigned int first, unsigned int count);
 public:
-	void Draw(VertexArray& va, const IndexBuffer& ib, const Shader& shader) const;
-	void BindAndDraw(VertexArray& va, const IndexBuffer& ib, const Shader& shader) const;
+	static void Draw(VertexArray& va, const IndexBuffer& ib, const Shader& shader);
+	static void BindAndDraw(VertexArray& va, const IndexBuffer& ib, const Shader& shader);
+	static void Draw(VertexArray& va, const Shader& shader,unsigned int first, unsigned int count);
 	void Clear() const;
 };

@@ -31,6 +31,11 @@ public:
 	void SetUniform3f(const std::string& name, float v0, float v1, float v2);
 	void SetUniform3f(const std::string& name, glm::vec3 uniform);
 	void SetUniform1f(const std::string& name, float value);
+
+
+public:
+	static Shader* GetDepthOnlyShader();
+	virtual void PrepareForDraw();
 private:
 	ShaderProgramSource ParseShader(const std::string& filepath);
 	unsigned int CompileShader(unsigned int type, const std::string& source);

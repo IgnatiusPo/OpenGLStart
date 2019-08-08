@@ -1,7 +1,7 @@
 #include "RenderObject.h"
 #include "StlData.h"
 #include "VertexBufferLayout.h"
-RenderObject::RenderObject(StlData* object) : _object(object)
+RenderObject::RenderObject(StlData* object) : _object(object) , _modelMat(glm::mat4(1.f))
 {
 	//get dir of this shit fucking moron
 	VertexArray vaObject;
@@ -35,5 +35,14 @@ void RenderObject::Draw()
 	}
 
 	_vArray.Bind();
-	glDrawArrays(GL_TRIANGLES, 0, _lastRenderSize);
+	_shader->Bind();
+	_shader->PrepareForDraw();
+	Renderer::Draw(_vArray, *_shader, 0, _lastRenderSize);
+	//glDrawArrays(GL_TRIANGLES, 0, _lastRenderSize);
+}
+
+
+void RenderObject::SetModelMatrix(glm::mat4 modelMatrix)
+{
+	_modelMat = modelMatrix;
 }

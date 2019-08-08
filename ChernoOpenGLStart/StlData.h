@@ -27,6 +27,7 @@ public:
 		Vertex() = default;
 	};
 	mutable std::mutex _mutex;
+	//bool IsSizeKnown;
 private:
 	struct VertexInfo
 	{

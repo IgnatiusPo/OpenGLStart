@@ -73,6 +73,14 @@ in vec3 fragPos;
 
 vec3 CalcDirLight(DirLight light, vec3 normal, vec3 viewDir);
 vec3 CalcPointLight(PointLight light, vec3 normal, vec3 viewDir, vec3 fragPos);
+
+float near = 0.1;
+float far = 500.0;
+float Tmp_LinearizeDepthBuffer(float depth)
+{
+	float z = depth * 2.0 - 1.0;
+	return (2 * near * far) / (far + near - z * (far - near));
+}
 //vec3 CalcSpotLight()
 void main()
 {
@@ -86,6 +94,9 @@ void main()
 
 	vec4 fragColor = vec4(result, 1.0f);
 	color = fragColor;
+
+	//float depth = Tmp_LinearizeDepthBuffer(gl_FragCoord.z) / far;
+	//color = vec4(vec3(depth), 1.0f);
 };
 
 vec3 CalcDirLight(DirLight light, vec3 normal, vec3 viewDir)

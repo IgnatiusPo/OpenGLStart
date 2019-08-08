@@ -7,7 +7,7 @@
 #define  HEADER_BUFF_SIZE 80
 
 
-StlData::StlData(const std::string & FilePath, bool isInNewThread) : TargetFilePath(FilePath), ParseThread(nullptr), _isInNewThread(isInNewThread)
+StlData::StlData(const std::string & FilePath, bool isInNewThread) : TargetFilePath(FilePath), ParseThread(nullptr), _isInNewThread(isInNewThread)//, IsSizeKnown(false)
 {
 	if (isInNewThread)
 		ParseThread = new std::thread(&StlData::ParseData, this);
@@ -31,6 +31,8 @@ void StlData::ParseData()
 
 	//todo get rid of that shit moron
 	PositionsAndNormals.reserve(NumberOfTriangles * 3);
+	//todo memory and compiler barrier
+	//IsSizeKnown = true;
 	_mutex.unlock();
 	for (size_t i = 0; i < NumberOfTriangles; ++i)
 	{
@@ -191,9 +193,7 @@ float StlData::FindDistance(vec3 Point1, vec3 Point2)
 
 void* StlData::GetPositionsAndNormals(unsigned int &realSize) 
 {
-	// / 2 cuz of normals
 	realSize = PositionsAndNormals.size();
-	//count = PositionsAndNormals.size();
 	return PositionsAndNormals.data();
 }
 

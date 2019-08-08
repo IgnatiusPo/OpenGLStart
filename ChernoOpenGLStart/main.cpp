@@ -1,6 +1,7 @@
 //#include <SDL.h>
 #define GLEW_STATIC
-#include <GL/glew.h>
+//#include <GL/glew.h>
+#include "Renderer.h"
 #include <GLFW/glfw3.h>
 #include <iostream>
 #include <fstream>
@@ -8,18 +9,23 @@
 #include <sstream>
 #include "Texture.h"
 
-#include "Renderer.h"
 #include "VertexBuffer.h"
 #include "VertexBufferLayout.h"
 #include "IndexBuffer.h"
 #include "VertexArray.h"
 #include "Shader.h"
+#include "BaseLightShader.h"
 #include "glm/glm.hpp"
 #include "glm/gtc/matrix_transform.hpp"
 #include "Camera.h"
 #include "StlData.h"
 #include <thread>
 #include "RenderObject.h"
+
+
+
+extern GlobalShaderState GShaderState;
+
 const float WINDOW_WIDTH = 1920;
 const float WINDOW_HEIGHT = 1080;
 bool firstMouse = true;
@@ -187,7 +193,8 @@ int main()
 				
 
 
-		Shader shaderObject("res/shaders/Dijkstra.shader");
+		BaseLightShader shaderObject("res/shaders/Dijkstra.shader");
+		//Shader shaderObject("res/shaders/DepthOnly.shader");
 		rObject.UseShader(&shaderObject);
 		rObject2.UseShader(&shaderObject);
 		//rObject3.UseShader(&shaderObject);
@@ -213,15 +220,11 @@ int main()
 
 		Renderer renderer;
 		glEnable(GL_DEPTH_TEST);
+		glDepthFunc(GL_LESS);
 
-
-		
 //draw loop		
-		int progressiveSize = 3;
 		while (!glfwWindowShouldClose(window))
 		{
-
-
 			shaderObject.Bind();
 			glLineWidth(1.0f);
 			//glPointSize(50.0f);
@@ -245,65 +248,39 @@ int main()
 			projection = glm::perspective(glm::radians(fov), WINDOW_WIDTH / WINDOW_HEIGHT, 0.1f, 500.f);
 
 			shaderObject.Bind();
-			shaderObject.SetUniformMat4f("u_View", view);
-			shaderObject.SetUniformMat4f("u_Projection", projection);
-			//material	
-			shaderObject.SetUniform3f("material.ambient", 1.0f, 0.5f, 0.31f);
-			shaderObject.SetUniform3f("material.diffuse", 1.0f, 0.5f, 0.31f);
-			shaderObject.SetUniform3f("material.specular", 0.2f, 0.2f, 0.2f);
-			shaderObject.SetUniform1f("material.shininess",32);
+			shaderObject.UpdateViewMatrix(view);
+			shaderObject.UpdateProjectionMatrix(projection);
+			//shaderObject.SetUniformMat4f("u_View", view);
+			//shaderObject.SetUniformMat4f("u_Projection", projection);
 			
-			//directional light
-			shaderObject.SetUniform3f("dirLight.direction", -0.2f, -1.f, -0.3f);
-			shaderObject.SetUniform3f("dirLight.ambient", 0.05f, 0.05f, 0.05f);
-			shaderObject.SetUniform3f("dirLight.diffuse", .2f, .2f, .2f);
-			shaderObject.SetUniform3f("dirLight.specular", .5f, .5f, .5f);
-				
-			//point lights
-			shaderObject.SetUniform3f("pointLights[0].position", pointLightPositions[0]);
-			shaderObject.SetUniform3f("pointLights[0].ambient", 0.05f, 0.05f, 0.05f);
-			shaderObject.SetUniform3f("pointLights[0].diffuse", 1.f, 1.f, 1.f);
-			shaderObject.SetUniform3f("pointLights[0].specular", 1.0f, 1.0f, 1.0f);
-			shaderObject.SetUniform1f("pointLights[0].constant", 1.0f);
-			shaderObject.SetUniform1f("pointLights[0].linear", 0.014f);
-			shaderObject.SetUniform1f("pointLights[0].quadratic", 0.0007f);
-			
-			shaderObject.SetUniform3f("pointLights[1].position", pointLightPositions[1]);
-			shaderObject.SetUniform3f("pointLights[1].ambient", 0.05f, 0.05f, 0.05f);
-			shaderObject.SetUniform3f("pointLights[1].diffuse", 0.f, 3.f, 2.f);
-			shaderObject.SetUniform3f("pointLights[1].specular", 1.0f, 1.0f, 1.0f);
-			shaderObject.SetUniform1f("pointLights[1].constant", 1.0f);
-			shaderObject.SetUniform1f("pointLights[1].linear", 0.09);
-			shaderObject.SetUniform1f("pointLights[1].quadratic", 0.032f);
-
-
-
-
-
-			shaderObject.SetUniform3f("u_ViewPosition", camera._position);
+			shaderObject.UpdateuViewPositionMatrix(camera._position);
+			shaderObject.SetPointLightPositions(pointLightPositions);
+			//shaderObject.SetUniform3f("u_ViewPosition", camera._position);
 
 ////////////////////////////////////////////////////////// main test
 			glm::mat4 model = glm::mat4(1.0f);
 			//model = glm::rotate(model, glm::radians(-90.f), glm::vec3(1.f, 0.0f, 0.0f));
 			model = glm::translate(model, glm::vec3(0.f, 0.f, 0.f));
 			model = glm::rotate(model,glm::radians(-90.f),glm::vec3(1.f, 0.f, 0.f));
-			shaderObject.SetUniformMat4f("u_Model", model);
-			
+			shaderObject.UpdateModelMatrix(model);
+			//shaderObject.SetUniformMat4f("u_Model", model);
 			rObject.Draw();
 
 			model = glm::mat4(1.f);
 			model = glm::translate(model, glm::vec3(150.f, 0.f, 0.f));
 			model = glm::rotate(model, glm::radians(-90.f), glm::vec3(1.f, 0.0f, 0.0f));
-			shaderObject.SetUniformMat4f("u_Model", model);
+			shaderObject.UpdateModelMatrix(model);
+			//shaderObject.SetUniformMat4f("u_Model", model);
 
 			rObject2.Draw();
 
-			model = glm::mat4(1.f);
+			//model = glm::mat4(1.f);
 			//model = glm::translate(model, glm::vec3(-150.f, 0.f, 0.f));
 			//model = glm::rotate(model, glm::radians(-90.f), glm::vec3(1.f, 0.0f, 0.0f));
 			//model = glm::rotate(model, glm::radians(180.f), glm::vec3(0.f, 0.f, 1.f));
-			model = glm::translate(model, glm::vec3(0.f, 0.f, -100.f));
-			shaderObject.SetUniformMat4f("u_Model", model);
+			//model = glm::translate(model, glm::vec3(0.f, 0.f, -100.f));
+			//shaderObject.UpdateModelMatrix(model);
+			//shaderObject.SetUniformMat4f("u_Model", model);
 
 			//rObject3.Draw();
 //////////////////////////////////////////////////////////// main end
@@ -400,6 +377,10 @@ void processInput(GLFWwindow *window)
 		camera.ProcessKeyboardInput(LEFT, deltaTime);
 	if (glfwGetKey(window, GLFW_KEY_D) == GLFW_PRESS)
 		camera.ProcessKeyboardInput(RIGHT, deltaTime);
+	if (glfwGetKey(window, GLFW_KEY_F1) == GLFW_PRESS)
+		GShaderState = GlobalShaderState::NORMAL;
+	if (glfwGetKey(window, GLFW_KEY_F2) == GLFW_PRESS)
+		GShaderState = GlobalShaderState::DEPTH_ONLY;
 }
 
 void mouse_callback(GLFWwindow *window, double xpos, double ypos)
