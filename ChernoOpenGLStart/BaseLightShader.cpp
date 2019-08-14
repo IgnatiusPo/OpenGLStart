@@ -21,9 +21,9 @@ void BaseLightShader::PrepareForDraw()
 	SetUniform1f("material.shininess", 32);
 
 	//directional light
-	SetUniform3f("dirLight.direction", -0.2f, -1.f, -0.3f);
+	SetUniform3f("dirLight.direction", -0.2f, -1.f, 0.3f);
 	SetUniform3f("dirLight.ambient", 0.05f, 0.05f, 0.05f);
-	SetUniform3f("dirLight.diffuse", .2f, .2f, .2f);
+	SetUniform3f("dirLight.diffuse", .3f, .3f, .3f);
 	SetUniform3f("dirLight.specular", .5f, .5f, .5f);
 
 	//point lights

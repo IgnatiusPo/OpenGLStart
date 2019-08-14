@@ -7,8 +7,7 @@
 #include <fstream>
 #include <string>
 #include <sstream>
-#include "Texture.h"
-
+#include "Cubemap.h"
 #include "VertexBuffer.h"
 #include "VertexBufferLayout.h"
 #include "IndexBuffer.h"
@@ -115,6 +114,51 @@ int main()
 			glm::vec3(140.f, 70.f, 30.f)
 		};
 
+		float skyboxVertices[] = {
+			// positions          
+			-1.0f,  1.0f, -1.0f,
+			-1.0f, -1.0f, -1.0f,
+			 1.0f, -1.0f, -1.0f,
+			 1.0f, -1.0f, -1.0f,
+			 1.0f,  1.0f, -1.0f,
+			-1.0f,  1.0f, -1.0f,
+
+			-1.0f, -1.0f,  1.0f,
+			-1.0f, -1.0f, -1.0f,
+			-1.0f,  1.0f, -1.0f,
+			-1.0f,  1.0f, -1.0f,
+			-1.0f,  1.0f,  1.0f,
+			-1.0f, -1.0f,  1.0f,
+
+			 1.0f, -1.0f, -1.0f,
+			 1.0f, -1.0f,  1.0f,
+			 1.0f,  1.0f,  1.0f,
+			 1.0f,  1.0f,  1.0f,
+			 1.0f,  1.0f, -1.0f,
+			 1.0f, -1.0f, -1.0f,
+
+			-1.0f, -1.0f,  1.0f,
+			-1.0f,  1.0f,  1.0f,
+			 1.0f,  1.0f,  1.0f,
+			 1.0f,  1.0f,  1.0f,
+			 1.0f, -1.0f,  1.0f,
+			-1.0f, -1.0f,  1.0f,
+
+			-1.0f,  1.0f, -1.0f,
+			 1.0f,  1.0f, -1.0f,
+			 1.0f,  1.0f,  1.0f,
+			 1.0f,  1.0f,  1.0f,
+			-1.0f,  1.0f,  1.0f,
+			-1.0f,  1.0f, -1.0f,
+
+			-1.0f, -1.0f, -1.0f,
+			-1.0f, -1.0f,  1.0f,
+			 1.0f, -1.0f, -1.0f,
+			 1.0f, -1.0f, -1.0f,
+			-1.0f, -1.0f,  1.0f,
+			 1.0f, -1.0f,  1.0f
+		};
+
 		GLCall(glfwSetFramebufferSizeCallback(window, FrameBufferSize));
 		GLCall(glEnable(GL_BLEND));
 		GLCall(glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA));
@@ -138,32 +182,6 @@ int main()
 		//Texture texture1("res/textures/batman2.png");
 		//texture1.Bind(0);
 		//shader.SetUniform1i("u_Texture1", 0);
-
-		//Texture texture2("res/textures/batman3.png");
-		//texture2.Bind(1);
-		//shader.SetUniform1i("u_Texture2", 1);
-
-		//Renderer renderer;
-
-		//texture1.Bind(0);
-		//texture2.Bind(1);
-
-		//glEnable(GL_DEPTH_TEST);
-
-		//glm::vec3 cubeTranslations[] = {
-		//	glm::vec3(0.0f,  0.0f,  0.0f),
-		//	glm::vec3(.20f,  .50f, -1.50f),
-		//	glm::vec3(-1.5f, -2.2f, -2.5f),
-		//	glm::vec3(-3.8f, -2.0f, -12.3f),
-		//	glm::vec3(2.4f, -0.4f, -3.5f),
-		//	glm::vec3(-1.7f,  3.0f, -7.5f),
-		//	glm::vec3(1.3f, -2.0f, -2.5f),
-		//	glm::vec3(1.5f,  2.0f, -2.5f),
-		//	glm::vec3(1.5f,  0.2f, -1.5f),
-		//	glm::vec3(-1.3f,  1.0f, -1.5f)
-		//};
-
-	
 
 		StlData obj("res/stl/moon_city_final.STL", true);
 
@@ -211,12 +229,31 @@ int main()
 
 
 
-		VertexArray vaDijkstra;
-		VertexBuffer vbDijkstra(dijkstraPositions, dijkstraPosSize);
-		VertexBufferLayout dijkstraLayout;
-		dijkstraLayout.Push<float>(3);
-		vaDijkstra.AddBuffer(vbDijkstra, dijkstraLayout);
-		vaDijkstra.Unbind();
+		//VertexArray vaDijkstra;
+		//VertexBuffer vbDijkstra(dijkstraPositions, dijkstraPosSize);
+		//VertexBufferLayout dijkstraLayout;
+		//dijkstraLayout.Push<float>(3);
+		//vaDijkstra.AddBuffer(vbDijkstra, dijkstraLayout);
+		//vaDijkstra.Unbind();
+
+		//skybox
+		VertexArray vaSkybox;
+		VertexBuffer vbSkybox(skyboxVertices, 36 * 3 * sizeof(float));
+		VertexBufferLayout vblSkybox;
+		vblSkybox.Push<float>(3);
+		vaSkybox.AddBuffer(vbSkybox, vblSkybox);
+		vaSkybox.Unbind();
+		Shader shaderSkybox("res/shaders/Skybox.shader");
+		std::vector<std::string> faces
+		{
+			"res/textures/skybox/right.jpg",
+			"res/textures/skybox/left.jpg",
+			"res/textures/skybox/top.jpg",
+			"res/textures/skybox/bottom.jpg",
+			"res/textures/skybox/front.jpg",
+			"res/textures/skybox/back.jpg"
+		};
+		Cubemap cubemapTexture(faces);
 
 		Renderer renderer;
 		glEnable(GL_DEPTH_TEST);
@@ -237,7 +274,6 @@ int main()
 			lastFrame = CurrentFrame;
 			
 			processInput(window);
-
 
 		
 			
@@ -314,7 +350,7 @@ int main()
 			ibLamp.Unbind();
 
 
-
+			
 			////////////////////////////////////////////////////////////////////////
 			//Dijkstra path 
 			//glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
@@ -348,8 +384,16 @@ int main()
 			//glDrawArrays(GL_LINE_STRIP, 0, dijkstraPosSize / (3 * sizeof(float)));
 			
 
-			
+			//skybox	
+			shaderSkybox.Bind();
+			cubemapTexture.Bind();
+			glDepthFunc(GL_LEQUAL);
+			shaderSkybox.SetUniformMat4f("u_Projection", projection);
+			shaderSkybox.SetUniformMat4f("u_View", view);
+			vaSkybox.Bind();
+			renderer.Draw(vaSkybox, shaderSkybox, 0, 36);
 
+			glDepthFunc(GL_LESS);
 
 			glfwSwapBuffers(window);
 			glfwPollEvents();

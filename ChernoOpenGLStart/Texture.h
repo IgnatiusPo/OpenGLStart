@@ -4,19 +4,14 @@
 
 class Texture
 {
-private:
+protected:
 	unsigned int _RendererID;
-	std::string	 _Filepath;
-	unsigned char* _LocalBuffer;
-	int _Width, _Height, _BPP;
 public:
-	Texture(const std::string& path);
+	Texture();
+	Texture(const std::string& path, int* Width, int* Height, int* channels);
 	~Texture();
 
-	void Bind(unsigned int slot = 0) const;
-	void Unbind() const;
-
-	inline int GetWidth() const { return _Width; }
-	inline int GetHeight() const { return _Height; }
+	virtual void Bind(unsigned int slot = 0) const;
+	virtual void Unbind() const;
 
 };

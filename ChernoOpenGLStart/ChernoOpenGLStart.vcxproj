@@ -133,6 +133,7 @@
   <ItemGroup>
     <ClCompile Include="BaseLightShader.cpp" />
     <ClCompile Include="Camera.cpp" />
+    <ClCompile Include="Cubemap.cpp" />
     <ClCompile Include="IndexBuffer.cpp" />
     <ClCompile Include="main.cpp" />
     <ClCompile Include="Renderer.cpp" />
@@ -150,10 +151,12 @@
     <None Include="res\shaders\DepthOnly.shader" />
     <None Include="res\shaders\Dijkstra.shader" />
     <None Include="res\shaders\Lamp.shader" />
+    <None Include="res\shaders\Skybox.shader" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="BaseLightShader.h" />
     <ClInclude Include="Camera.h" />
+    <ClInclude Include="Cubemap.h" />
     <ClInclude Include="IndexBuffer.h" />
     <ClInclude Include="Renderer.h" />
     <ClInclude Include="RenderObject.h" />

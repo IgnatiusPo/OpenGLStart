@@ -46,55 +46,55 @@ void StlData::ParseData()
 
 		PositionsAndNormals.emplace_back(vBuff, normalBuff);
 
-		auto It_1 = Vertices.insert(std::make_pair(vBuff, 0));
-		if (It_1.second)
-		{
-			MainGraph.Points.push_back(vBuff);
-			IndexArr[0] = MainGraph.Points.size() - 1;
-			It_1.first->second = IndexArr[0];
-			MainGraph.PointsInfo.push_back(VertexInfo());
-		}
-		else
-			IndexArr[0] = It_1.first->second;
+		//auto It_1 = Vertices.insert(std::make_pair(vBuff, 0));
+		//if (It_1.second)
+		//{
+		//	MainGraph.Points.push_back(vBuff);
+		//	IndexArr[0] = MainGraph.Points.size() - 1;
+		//	It_1.first->second = IndexArr[0];
+		//	MainGraph.PointsInfo.push_back(VertexInfo());
+		//}
+		//else
+		//	IndexArr[0] = It_1.first->second;
 
 		fread(&vBuff, sizeof(float) * 3, 1, file);
 
 
 		PositionsAndNormals.emplace_back(vBuff, normalBuff);
 
-		auto It_2 = Vertices.insert(std::make_pair(vBuff, 0));
-		if (It_2.second)
-		{
-			MainGraph.Points.push_back(vBuff);
-			IndexArr[1] = MainGraph.Points.size() - 1;
-			It_2.first->second = IndexArr[1];
-			MainGraph.PointsInfo.push_back(VertexInfo());
-		}
-		else
-			IndexArr[1] = It_2.first->second;
+		//auto It_2 = Vertices.insert(std::make_pair(vBuff, 0));
+		//if (It_2.second)
+		//{
+		//	MainGraph.Points.push_back(vBuff);
+		//	IndexArr[1] = MainGraph.Points.size() - 1;
+		//	It_2.first->second = IndexArr[1];
+		//	MainGraph.PointsInfo.push_back(VertexInfo());
+		//}
+		//else
+		//	IndexArr[1] = It_2.first->second;
 
 		fread(&vBuff, sizeof(float) * 3, 1, file);
 
 
 		PositionsAndNormals.emplace_back(vBuff, normalBuff);
 
-		auto It_3 = Vertices.insert(std::make_pair(vBuff, 0));
-		if (It_3.second)
-		{
-			MainGraph.Points.push_back(vBuff);
-			IndexArr[2] = MainGraph.Points.size() - 1;
-			It_3.first->second = IndexArr[2];
-			MainGraph.PointsInfo.push_back(VertexInfo());
-		}
-		else
-			IndexArr[2] = It_3.first->second;
-		//////////////////////////////////////////////////
-		MainGraph.PointsInfo[IndexArr[0]].AdjacentVertices.insert(IndexArr[1]);
-		MainGraph.PointsInfo[IndexArr[0]].AdjacentVertices.insert(IndexArr[2]);
-		MainGraph.PointsInfo[IndexArr[1]].AdjacentVertices.insert(IndexArr[0]);
-		MainGraph.PointsInfo[IndexArr[1]].AdjacentVertices.insert(IndexArr[2]);
-		MainGraph.PointsInfo[IndexArr[2]].AdjacentVertices.insert(IndexArr[0]);
-		MainGraph.PointsInfo[IndexArr[2]].AdjacentVertices.insert(IndexArr[1]);
+		//auto It_3 = Vertices.insert(std::make_pair(vBuff, 0));
+		//if (It_3.second)
+		//{
+		//	MainGraph.Points.push_back(vBuff);
+		//	IndexArr[2] = MainGraph.Points.size() - 1;
+		//	It_3.first->second = IndexArr[2];
+		//	MainGraph.PointsInfo.push_back(VertexInfo());
+		//}
+		//else
+		//	IndexArr[2] = It_3.first->second;
+		////////////////////////////////////////////////////
+		//MainGraph.PointsInfo[IndexArr[0]].AdjacentVertices.insert(IndexArr[1]);
+		//MainGraph.PointsInfo[IndexArr[0]].AdjacentVertices.insert(IndexArr[2]);
+		//MainGraph.PointsInfo[IndexArr[1]].AdjacentVertices.insert(IndexArr[0]);
+		//MainGraph.PointsInfo[IndexArr[1]].AdjacentVertices.insert(IndexArr[2]);
+		//MainGraph.PointsInfo[IndexArr[2]].AdjacentVertices.insert(IndexArr[0]);
+		//MainGraph.PointsInfo[IndexArr[2]].AdjacentVertices.insert(IndexArr[1]);
 
 		fseek(file, sizeof(uint16_t), SEEK_CUR);
 	}
