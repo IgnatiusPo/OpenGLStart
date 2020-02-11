@@ -1,7 +1,7 @@
 #pragma once
 
 #include "Renderer.h"
-
+#include <string>
 class Texture
 {
 protected:

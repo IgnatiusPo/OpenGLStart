@@ -1,6 +1,6 @@
 #include "Texture.h"
 #include "stb_image.h"
-
+#include <GL/glew.h>
 Texture::Texture() : _RendererID(0)
 {
 

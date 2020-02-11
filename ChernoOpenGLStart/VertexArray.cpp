@@ -1,20 +1,39 @@
 #include "VertexArray.h"
 #include "VertexBufferLayout.h"
 #include "Renderer.h"
-
+#include <GL/glew.h>
 VertexArray::VertexArray()
 {
-	GLCall(glGenVertexArrays(1, &_RendererID));
+	//GLCall(glGenVertexArrays(1, &_RendererID));
 }
 
+
+//VertexArray::VertexArray(VertexArray&& vArray)
+//{
+//	_RendererID = vArray._RendererID;
+//	vArray._RendererID = 0;
+//}
+
+//VertexArray::VertexArray(const VertexArray& vArray)
+//{
+//	_RendererID = vArray._RendererID;
+//}
 
 VertexArray::~VertexArray()
 {
-	GLCall(glDeleteVertexArrays(1, &_RendererID));
+	//GLCall(glDeleteVertexArrays(1, &_RendererID));
 }
+
+//void VertexArray::Init()
+//{
+//	GLCall(glGenVertexArrays(1, &_RendererID));
+//}
 
 void VertexArray::AddBuffer(const VertexBuffer& vb, const VertexBufferLayout& layout)
 {
+	if (_RendererID == 0)
+		GLCall(glGenVertexArrays(1, &_RendererID));
+
 	Bind();
 	vb.Bind();
 	const auto& elements = layout.GetElements();
@@ -24,7 +43,7 @@ void VertexArray::AddBuffer(const VertexBuffer& vb, const VertexBufferLayout& la
 		const auto& element = elements[i];
 		GLCall(glEnableVertexAttribArray(i));
 		GLCall(glVertexAttribPointer(i, element.count, element.type, element._normalized, layout.GetStride(),(const void*) offset));
-		offset += element.count * VertexBufferElement::GetSizeOfType(element.type);
+		offset += element.count * GetSizeOfType(element.type);
 	}
 }
 

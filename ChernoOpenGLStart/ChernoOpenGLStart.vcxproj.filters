@@ -15,12 +15,6 @@
     <Filter Include="res\shaders">
       <UniqueIdentifier>{692c3447-4bcb-4331-a9ac-ad96974afb1c}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Source Files\vendor">
-      <UniqueIdentifier>{454ec868-f006-4219-ba8d-04b661e6840d}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Source Files\vendor\stb_image">
-      <UniqueIdentifier>{d6274ef1-a0cc-4f6c-8dbd-d325f5131b1f}</UniqueIdentifier>
-    </Filter>
     <Filter Include="Header Files\StlData">
       <UniqueIdentifier>{b714a63f-5a03-42b2-8187-f45a2291f590}</UniqueIdentifier>
     </Filter>
@@ -33,15 +27,18 @@
     <Filter Include="Header Files\Shaders">
       <UniqueIdentifier>{da14f9f9-1da8-4985-b1c2-f2fbcf22a1f5}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Source Files\StlData\vendor">
+      <UniqueIdentifier>{454ec868-f006-4219-ba8d-04b661e6840d}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\StlData\vendor\stb_image">
+      <UniqueIdentifier>{d6274ef1-a0cc-4f6c-8dbd-d325f5131b1f}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="main.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="Renderer.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="VertexBuffer.h.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="IndexBuffer.cpp">
@@ -51,7 +48,7 @@
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="stb_image.cpp">
-      <Filter>Source Files\vendor\stb_image</Filter>
+      <Filter>Source Files\StlData\vendor\stb_image</Filter>
     </ClCompile>
     <ClCompile Include="Texture.cpp">
       <Filter>Source Files</Filter>
@@ -74,6 +71,21 @@
     <ClCompile Include="Cubemap.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="Application.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Scene.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Mesh.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="VertexBuffer.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="VertexBufferLayout.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <None Include="res\shaders\Basic.shader">
@@ -94,6 +106,18 @@
     <None Include="res\shaders\Skybox.shader">
       <Filter>res\shaders</Filter>
     </None>
+    <None Include="res\shaders\BasicVert.shader">
+      <Filter>res\shaders</Filter>
+    </None>
+    <None Include="res\shaders\PhongFrag.shader">
+      <Filter>res\shaders</Filter>
+    </None>
+    <None Include="res\shaders\QuadVert.shader">
+      <Filter>res\shaders</Filter>
+    </None>
+    <None Include="res\shaders\SimpleColorFrag.shader">
+      <Filter>res\shaders</Filter>
+    </None>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Renderer.h">
@@ -112,7 +136,7 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="stb_image.h">
-      <Filter>Source Files\vendor\stb_image</Filter>
+      <Filter>Source Files\StlData\vendor\stb_image</Filter>
     </ClInclude>
     <ClInclude Include="Texture.h">
       <Filter>Source Files</Filter>
@@ -133,6 +157,24 @@
       <Filter>Header Files\Shaders</Filter>
     </ClInclude>
     <ClInclude Include="Cubemap.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Application.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Scene.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Mesh.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Model.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Resources.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="res\shaders\Macroses.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>

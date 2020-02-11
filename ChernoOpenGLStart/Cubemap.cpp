@@ -1,7 +1,7 @@
 #include "Cubemap.h"
 #include "stb_image.h"
 #include <iostream>
-
+#include <GL/glew.h>
 Cubemap::Cubemap() 
 {
 
