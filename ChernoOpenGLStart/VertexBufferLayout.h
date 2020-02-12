@@ -1,6 +1,6 @@
 #pragma once
 #include <vector>
-#include "Renderer.h"
+//#include "Renderer.h"
 //#include <GL/glew.h>
 unsigned int GetSizeOfType(unsigned int Type);
 

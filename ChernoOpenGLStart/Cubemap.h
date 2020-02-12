@@ -1,14 +1,15 @@
 #pragma once
-#include "Texture.h"
 #include <vector>
-class Cubemap : public Texture
+class Cubemap
 {
+	unsigned int _RendererID = 0;
 public:
 	Cubemap();
 	Cubemap(std::vector<std::string> faces);
 	~Cubemap();
 	
-	void Bind(unsigned int slot = 0) const override;
-	void Unbind() const override;
+	void Init(std::vector<std::string> faces);
+	void Bind(unsigned int slot = 0) const;
+	void Unbind() const;
 };
 

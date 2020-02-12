@@ -1,6 +1,7 @@
 #include <GL/glew.h>
 #include "Shader.h"
-#include "Renderer.h"
+//#include "Renderer.h"
+#include "Macroses.h"
 #include <iostream>
 #include <fstream>
 #include <string>

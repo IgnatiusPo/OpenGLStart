@@ -137,6 +137,7 @@
     <ClCompile Include="Camera.cpp" />
     <ClCompile Include="Cubemap.cpp" />
     <ClCompile Include="IndexBuffer.cpp" />
+    <ClCompile Include="Macroses.cpp" />
     <ClCompile Include="main.cpp" />
     <ClCompile Include="Mesh.cpp" />
     <ClCompile Include="Renderer.cpp" />
@@ -159,8 +160,11 @@
     <None Include="res\shaders\Lamp.shader" />
     <None Include="res\shaders\PhongFrag.shader" />
     <None Include="res\shaders\QuadVert.shader" />
+    <None Include="res\shaders\Simple3floatVert.shader" />
     <None Include="res\shaders\SimpleColorFrag.shader" />
     <None Include="res\shaders\Skybox.shader" />
+    <None Include="res\shaders\SkyboxFrag.shader" />
+    <None Include="res\shaders\SkyboxVert.shader" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Application.h" />
@@ -168,12 +172,12 @@
     <ClInclude Include="Camera.h" />
     <ClInclude Include="Cubemap.h" />
     <ClInclude Include="IndexBuffer.h" />
+    <ClInclude Include="Macroses.h" />
     <ClInclude Include="Mesh.h" />
     <ClInclude Include="Model.h" />
     <ClInclude Include="Renderer.h" />
     <ClInclude Include="RenderObject.h" />
     <ClInclude Include="Resources.h" />
-    <ClInclude Include="res\shaders\Macroses.h" />
     <ClInclude Include="Scene.h" />
     <ClInclude Include="Shader.h" />
     <ClInclude Include="stb_image.h" />

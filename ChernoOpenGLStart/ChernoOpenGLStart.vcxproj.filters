@@ -86,6 +86,9 @@
     <ClCompile Include="VertexBufferLayout.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="Macroses.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <None Include="res\shaders\Basic.shader">
@@ -118,6 +121,13 @@
     <None Include="res\shaders\SimpleColorFrag.shader">
       <Filter>res\shaders</Filter>
     </None>
+    <None Include="res\shaders\SkyboxVert.shader">
+      <Filter>res\shaders</Filter>
+    </None>
+    <None Include="res\shaders\SkyboxFrag.shader">
+      <Filter>res\shaders</Filter>
+    </None>
+    <None Include="res\shaders\Simple3floatVert.shader" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Renderer.h">
@@ -174,7 +184,7 @@
     <ClInclude Include="Resources.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="res\shaders\Macroses.h">
+    <ClInclude Include="Macroses.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>

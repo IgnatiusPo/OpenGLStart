@@ -1,5 +1,6 @@
 #include "VertexBufferLayout.h"
 #include <GL/glew.h>
+#include "Macroses.h"
 
 unsigned int GetSizeOfType(unsigned int Type)
 {

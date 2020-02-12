@@ -1,5 +1,6 @@
 #include "VertexBuffer.h"
-#include "Renderer.h"
+//#include "Renderer.h"
+#include "Macroses.h"
 #include <GL/glew.h>
 
 VertexBuffer::VertexBuffer(const void* data,const unsigned int& size, unsigned int count) : _count(count)
@@ -36,7 +37,9 @@ void VertexBuffer::AddSubData(const unsigned int& offset,const unsigned int& siz
 void VertexBuffer::BindData(const void* data,const unsigned int& size, unsigned int count)
 {
 	if (_RendererID == 0)
+	{
 		GLCall(glGenBuffers(1, &_RendererID));
+	}
 
 	_count = count;
 	GLCall(glBindBuffer(GL_ARRAY_BUFFER, _RendererID));
@@ -45,6 +48,8 @@ void VertexBuffer::BindData(const void* data,const unsigned int& size, unsigned 
 
 void VertexBuffer::Init(const void* data, const unsigned int& size, unsigned int count)
 {
+	ASSERT(_RendererID == 0); //shouldn't be already initialized
+
 	GLCall(glGenBuffers(1, &_RendererID));
 	BindData(data, size, count);
 }

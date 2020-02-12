@@ -1,6 +1,7 @@
 #include "VertexArray.h"
 #include "VertexBufferLayout.h"
-#include "Renderer.h"
+//#include "Renderer.h"
+#include "Macroses.h"
 #include <GL/glew.h>
 VertexArray::VertexArray()
 {
@@ -32,7 +33,10 @@ VertexArray::~VertexArray()
 void VertexArray::AddBuffer(const VertexBuffer& vb, const VertexBufferLayout& layout)
 {
 	if (_RendererID == 0)
+	{
 		GLCall(glGenVertexArrays(1, &_RendererID));
+	}
+
 
 	Bind();
 	vb.Bind();

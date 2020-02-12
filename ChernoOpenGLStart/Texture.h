@@ -1,17 +1,30 @@
 #pragma once
 
-#include "Renderer.h"
+//#include "Renderer.h"
 #include <string>
+#include "GL/glew.h"
+
+typedef size_t TextureID;
+
+enum class TextureType
+{
+	Texture_2D = GL_TEXTURE_2D,
+	Texture_3D = GL_TEXTURE_3D
+};
+
 class Texture
 {
-protected:
-	unsigned int _RendererID;
+	unsigned int _RendererID = 0;
 public:
 	Texture();
-	Texture(const std::string& path, int* Width, int* Height, int* channels);
-	~Texture();
+	Texture(const std::string& path);
 
-	virtual void Bind(unsigned int slot = 0) const;
-	virtual void Unbind() const;
+	void Init(const std::string& path);
+	void Bind(unsigned int slot = 0) const;
+	void Unbind() const;
+	
+public:
+	int _width, _height, _nChannels = 0;
 
+	const static TextureID InvalidTextureID = -1;
 };

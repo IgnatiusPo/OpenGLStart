@@ -1,32 +1,6 @@
 //#include <SDL.h>
-#define GLEW_STATIC
+//#define GLEW_STATIC
 #include "Application.h"
-
-
-
-//extern GlobalShaderState GShaderState;
-//
-//const float WINDOW_WIDTH = 1920;
-//const float WINDOW_HEIGHT = 1080;
-//bool firstMouse = true;
-//float deltaTime = 0.0f;
-//float lastFrame = 0.0f;
-//float lastCameraX = WINDOW_WIDTH / 2;
-//float lastCameraY = WINDOW_HEIGHT / 2;
-//float fov = 45.f;
-//glm::vec3 lightPos(0.f, 0.f, 0.f);
-//glm::vec4 lampColor(1.0f, 1.0f, 1.0f, 1.0f);
-//Camera camera(glm::vec3(0.f, 100.f, 100.f));
-//
-//void FrameBufferSize(GLFWwindow* window, int Width, int Height)
-//{
-//	glViewport(0, 0, Width, Height);
-//}
-//
-//
-//void processInput(GLFWwindow *window);
-//void mouse_callback(GLFWwindow *window, double xpos, double ypos);
-//void scroll_callback(GLFWwindow *window, double xoffset, double ypos);
 
 int main() 
 {

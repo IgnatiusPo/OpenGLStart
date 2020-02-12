@@ -1,9 +1,11 @@
 #pragma once
 #include <vector>
+//#include <memory>
 #include "Scene.h"
 #include "Camera.h"
 
-
+//todo really need this?
+#include "Texture.h"
 
 class Application
 {
@@ -12,10 +14,15 @@ class Application
 	float _deltaTime = 0.f;
 	float _lastFrame = 0.f;
 	Scene _scene;
-	glm::vec3 _dirLightDirection;
-	bool bShouldClose = false;
 
-	std::shared_ptr<Shader> FSQuadShader;
+	std::shared_ptr<Shader> _FSQuadShader;
+	std::shared_ptr<Shader> _SkyboxShader;
+	std::shared_ptr<Shader> TestShader;
+
+
+	TextureID _CubemapTexture = Texture::InvalidTextureID;
+
+	
 public:
 	Application();
 
@@ -24,6 +31,8 @@ public:
 	bool ShouldClose();
 	void ProcessInput();
 	void SwapBuffers();
+
+	void DrawSkyBox(const glm::mat4& view, const glm::mat4& projection);
 
 	~Application();
 
