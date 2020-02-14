@@ -106,19 +106,27 @@ int Application::Init()
 	DefaultShader->Bind();
 
 	//material	
-	DefaultShader->SetUniform("material.ambient", 1.0f, 0.5f, 0.31f);
-	DefaultShader->SetUniform("material.diffuse", 1.0f, 0.5f, 0.31f);
-	DefaultShader->SetUniform("material.specular", 0.2f, 0.2f, 0.2f);
-	DefaultShader->SetUniform("material.shininess", 32.f);
+	//DefaultShader->SetUniform("material.ambient", 1.0f, 0.5f, 0.31f);
+	//DefaultShader->SetUniform("material.diffuse", 1.0f, 0.5f, 0.31f);
+	//DefaultShader->SetUniform("material.specular", 0.2f, 0.2f, 0.2f);
+	//DefaultShader->SetUniform("material.shininess", 32.f);
 
-	//directional light
-	DefaultShader->SetUniform("dirLight.direction", -0.2f, -1.f, 0.3f);
-	DefaultShader->SetUniform("dirLight.ambient", 0.05f, 0.05f, 0.05f);
-	DefaultShader->SetUniform("dirLight.diffuse", .5f, .5f, .5f);
-	DefaultShader->SetUniform("dirLight.specular", 1.5f, 1.5f, 1.5f);
+	////directional light
+	//DefaultShader->SetUniform("dirLight.direction", -0.2f, -1.f, 0.3f);
+
+	//DefaultShader->SetUniform("dirLight.ambient", 0.05f, 0.05f, 0.05f);
+	//DefaultShader->SetUniform("dirLight.diffuse", .5f, .5f, .5f);
+	//DefaultShader->SetUniform("dirLight.specular", 1.5f, 1.5f, 1.5f);
+
+	MaterialID DefaultMaterialID = Renderer::CreateDefaultPhongMaterial(glm::vec3(1.0f, 0.5f, 0.31f), 
+		glm::vec3(1.0f, 0.5f, 0.31f), glm::vec3(0.2f, 0.2f, 0.2f), 32.f ,glm::vec3(-0.2f, -1.f, 0.3f));
 
 	_scene._sceneObjects[0]._shader = DefaultShader;
 	_scene._sceneObjects[1]._shader = DefaultShader;
+
+	_scene._sceneObjects[0].SetMaterial(DefaultMaterialID);
+	_scene._sceneObjects[1].SetMaterial(DefaultMaterialID);
+
 
 	//special shaders
 	_FSQuadShader = std::shared_ptr<Shader>(new Shader("res/shaders/QuadVert.shader", "res/shaders/SimpleColorFrag.shader"));

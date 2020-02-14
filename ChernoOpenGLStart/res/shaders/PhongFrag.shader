@@ -5,9 +5,9 @@ layout(location = 0) out vec4 color;
 struct DirLight {
 	vec3 direction;
 
-	vec3 ambient;
-	vec3 diffuse;
-	vec3 specular;
+	//vec3 ambient;
+	//vec3 diffuse;
+	//vec3 specular;
 };
 
 
@@ -63,8 +63,11 @@ vec3 CalcDirLight(DirLight light, vec3 normal, vec3 viewDir)
 	vec3 reflectDir = reflect(-lightDir, normal);
 	float spec = pow(max(dot(viewDir, reflectDir), 0.0f), material.shininess);
 
-	vec3 ambient = material.ambient * light.ambient;
-	vec3 diffuse = light.diffuse * (diff * material.diffuse);
-	vec3 specular = light.specular * (spec * material.specular);
+	//vec3 ambient = material.ambient * light.ambient;
+	//vec3 diffuse = light.diffuse * (diff * material.diffuse);
+	//vec3 specular = light.specular * (spec * material.specular);
+	vec3 ambient = material.ambient * 0.1f;
+	vec3 diffuse = diff * material.diffuse * 0.5;
+	vec3 specular = spec * material.specular * 1.2f;
 	return (ambient + diffuse + specular);
 }

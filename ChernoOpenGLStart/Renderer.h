@@ -4,6 +4,7 @@
 #include <iostream>
 #include "Texture.h"
 #include "Cubemap.h"
+#include "Material.h"
 #include <vector>
 
 
@@ -43,6 +44,9 @@ namespace Renderer
 	TextureID CreateCubemapTexture(std::vector<std::string> faces);
 	Texture* GetTextureByID(TextureID ID);
 	Cubemap* GetCubemapTextureByID(TextureID ID);
+	Material* GetMaterialByID(MaterialID ID);
+	MaterialID CreateDefaultPhongMaterial(const glm::vec3& ambient, const glm::vec3& diffuse, const glm::vec3& specular, const float& shininess, const glm::vec3& dirLight);
+	void ApplyMaterial(const MaterialID& MatID, Shader* shader);
 
 	static const float QuadPositions[] = { //vertex attributes for a quad that fills the entire screen in NDC.
 		-1.0f,  1.0f,
@@ -108,4 +112,5 @@ namespace Renderer
 
 	extern std::vector<Texture> Textures;
 	extern std::vector<Cubemap> CubemapTextures;
+	extern std::vector<Material> Materials;
 };

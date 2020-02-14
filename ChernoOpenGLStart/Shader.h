@@ -2,6 +2,7 @@
 #include <string>
 #include <unordered_map>
 #include "glm/glm.hpp"
+#include "Uniform.h"
 struct ShaderProgramSource
 {
 	std::string VertexSource;
@@ -25,13 +26,23 @@ public:
 	void Unbind() const;
 
 	// Set uniforms
-	void SetUniform(const std::string& name, int value);
-	void SetUniform(const std::string& name, float v0, float v1, float v2, float v3);
-	void SetUniform(const std::string& name, glm::vec4 uniform);
-	void SetUniform(const std::string& name, const glm::mat4 matrix);
-	void SetUniform(const std::string& name, float v0, float v1, float v2);
-	void SetUniform(const std::string& name, glm::vec3 uniform);
-	void SetUniform(const std::string& name, float value);
+	void SetUniform(const std::string& name, const int& value);
+	void SetUniform(const std::string& name, const float& value);
+	void SetUniform(const std::string& name, const glm::vec1& uniform);
+	void SetUniform(const std::string& name, const glm::vec2& uniform);
+	void SetUniform(const std::string& name, const glm::vec3& uniform);
+	void SetUniform(const std::string& name, const float& v0, const float& v1, const float& v2);
+	void SetUniform(const std::string& name, const glm::vec4& uniform);
+	void SetUniform(const std::string& name, const float& v0, const float& v1, const float& v2, const float& v3);
+	void SetUniform(const std::string& name, const glm::ivec1& uniform);
+	void SetUniform(const std::string& name, const glm::ivec2& uniform);
+	void SetUniform(const std::string& name, const glm::ivec3& uniform);
+	void SetUniform(const std::string& name, const glm::ivec4& uniform);
+	void SetUniform(const std::string& name, const glm::mat4& matrix);
+	void SetUniform(const std::string& name, const glm::mat3& uniform);
+	
+
+	void SetUniform(const Uniform& uniform);
 
 
 public:

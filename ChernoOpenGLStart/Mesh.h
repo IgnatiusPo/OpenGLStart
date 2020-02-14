@@ -2,6 +2,7 @@
 #include "VertexArray.h"
 #include <string>
 #include "glm/glm.hpp"
+#include "Material.h"
 //#include "Model.h"
 enum class ModelType
 {
@@ -39,19 +40,14 @@ class Mesh
 	VertexBuffer _vBuffer;
 	void* _vertexData = nullptr;
 	ModelType _modelType;
+	MaterialID _material = Material::InvalidMaterialID;
 public:
 	Mesh();
 	Mesh(void* vertexData, ModelType _modelType, VertexArray&& vArray, VertexBuffer&& vBuffer);
 	~Mesh();
 	//todo temporary
-	void UseShader(std::shared_ptr<class Shader> shader)
-	{
-		_shader = shader;
-	}
-	void SetModelMatrix(glm::mat4 ModelMatrix)
-	{
-		_modelMat = ModelMatrix;
-	}
+	void UseShader(std::shared_ptr<class Shader> shader);
+	void SetModelMatrix(glm::mat4 ModelMatrix);
 	
 	const VertexArray& GetVA() const
 	{
@@ -61,6 +57,12 @@ public:
 	{
 		return _vBuffer;
 	}
+	void SetMaterial(const MaterialID& ID);
+	MaterialID GetMaterial() const
+	{
+		return _material;
+	}
+	//void SetMaterial(Material* Mat);
 
 	glm::mat4 _modelMat = glm::mat4(1.f);
 	//todo temporary

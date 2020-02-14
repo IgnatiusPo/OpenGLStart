@@ -173,6 +173,7 @@
     <ClInclude Include="Cubemap.h" />
     <ClInclude Include="IndexBuffer.h" />
     <ClInclude Include="Macroses.h" />
+    <ClInclude Include="Material.h" />
     <ClInclude Include="Mesh.h" />
     <ClInclude Include="Model.h" />
     <ClInclude Include="Renderer.h" />
@@ -183,6 +184,7 @@
     <ClInclude Include="stb_image.h" />
     <ClInclude Include="StlData.h" />
     <ClInclude Include="Texture.h" />
+    <ClInclude Include="Uniform.h" />
     <ClInclude Include="VertexArray.h" />
     <ClInclude Include="VertexBuffer.h" />
     <ClInclude Include="VertexBufferLayout.h" />

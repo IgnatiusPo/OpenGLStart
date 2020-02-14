@@ -35,41 +35,129 @@ void Shader::Unbind() const
 }
 
 
-void Shader::SetUniform(const std::string& name, int value)
+void Shader::SetUniform(const std::string& name, const int& value)
 {
 	GLCall(glUniform1i(GetUniformLocation(name),value));
 
 }
 
-void Shader::SetUniform(const std::string& name, float v0, float v1, float v2, float v3)
+void Shader::SetUniform(const std::string& name, const float& v0, const float& v1, const float& v2, const float& v3)
 {
 	GLCall(glUniform4f(GetUniformLocation(name), v0,  v1, v2, v3));
 }
 
-void Shader::SetUniform(const std::string& name, glm::vec4 uniform)
+void Shader::SetUniform(const std::string& name, const glm::vec4& uniform)
 {
 	GLCall(glUniform4f(GetUniformLocation(name), uniform.x, uniform.y, uniform.z, uniform.w));
 }
 
-void Shader::SetUniform(const std::string& name, const glm::mat4 matrix)
+void Shader::SetUniform(const std::string& name, const glm::mat4& matrix)
 {
 	GLCall(glUniformMatrix4fv(GetUniformLocation(name), 1, GL_FALSE, &matrix[0][0]));
 }
 
-void Shader::SetUniform(const std::string& name, float v0, float v1, float v2)
+void Shader::SetUniform(const std::string& name, const float& v0, const float& v1, const float& v2)
 {
 	GLCall(glUniform3f(GetUniformLocation(name), v0, v1, v2));
 }
 
-void Shader::SetUniform(const std::string& name, glm::vec3 uniform)
+void Shader::SetUniform(const std::string& name, const glm::vec3& uniform)
 {
 	GLCall(glUniform3f(GetUniformLocation(name), uniform.x, uniform.y, uniform.z));
 }
 
-void Shader::SetUniform(const std::string& name, float value)
+void Shader::SetUniform(const std::string& name, const float& value)
 {
 	GLCall(glUniform1f(GetUniformLocation(name), value));
 }
+
+void Shader::SetUniform(const std::string& name, const glm::vec1& uniform)
+{
+	GLCall(glUniform1f(GetUniformLocation(name), uniform.x));
+}
+
+void Shader::SetUniform(const std::string& name, const glm::vec2& uniform)
+{
+	GLCall(glUniform2f(GetUniformLocation(name), uniform.x, uniform.y));
+}
+
+void Shader::SetUniform(const std::string& name, const glm::ivec1& uniform)
+{
+	GLCall(glUniform1i(GetUniformLocation(name), uniform.x));
+
+}
+
+void Shader::SetUniform(const std::string& name, const glm::ivec2& uniform)
+{
+	GLCall(glUniform2i(GetUniformLocation(name), uniform.x, uniform.y));
+
+}
+
+void Shader::SetUniform(const std::string& name, const glm::ivec3& uniform)
+{
+	GLCall(glUniform3i(GetUniformLocation(name), uniform.x, uniform.y, uniform.z));
+
+}
+
+void Shader::SetUniform(const std::string& name, const glm::ivec4& uniform)
+{
+	GLCall(glUniform4i(GetUniformLocation(name), uniform.x, uniform.y, uniform.z, uniform.w));
+
+}
+
+void Shader::SetUniform(const std::string& name, const glm::mat3& uniform)
+{
+	GLCall(glUniformMatrix3fv(GetUniformLocation(name), 1, GL_FALSE,  &uniform[0][0]));
+}
+
+void Shader::SetUniform(const Uniform& uniform)
+{
+	UniformType Type = uniform.type;
+	switch (Type)
+	{
+	case UniformType::mat3: {
+		SetUniform(uniform.name, uniform.m3);
+		break;
+	}
+	case UniformType::mat4: {
+		SetUniform(uniform.name, uniform.m4);
+		break;
+	}
+	case UniformType::vec1f: {
+		SetUniform(uniform.name, uniform.v1);
+		break;
+	}
+	case UniformType::vec2f: {
+		SetUniform(uniform.name, uniform.v2);
+		break;
+	}
+	case UniformType::vec3f: {
+		SetUniform(uniform.name, uniform.v3);
+		break;
+	}
+	case UniformType::vec4f: {
+		SetUniform(uniform.name, uniform.v4);
+		break;
+	}
+	case UniformType::vec1i: {
+		SetUniform(uniform.name, uniform.iv1);
+		break;
+	}
+	case UniformType::vec2i: {
+		SetUniform(uniform.name, uniform.iv2);
+		break;
+	}
+	case UniformType::vec3i: {
+		SetUniform(uniform.name, uniform.iv3);
+		break;
+	}
+	case UniformType::vec4i: {
+		SetUniform(uniform.name, uniform.iv4);
+		break;
+	}
+	}
+}
+
 
 std::string Shader::ParseShader(const std::string& filepath)
 {

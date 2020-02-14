@@ -21,6 +21,26 @@ Mesh::~Mesh()
 {
 }
 
+void Mesh::UseShader(std::shared_ptr<class Shader> shader)
+{
+	_shader = shader;
+}
+
+void Mesh::SetModelMatrix(glm::mat4 ModelMatrix)
+{
+	_modelMat = ModelMatrix;
+}
+
+void Mesh::SetMaterial(const MaterialID& ID)
+{
+	_material = ID;
+}
+
+//void Mesh::SetMaterial(Material* Mat)
+//{
+//
+//}
+
 template<>
 Mesh LoadModel<ModelType::STL>(std::string path)
 {

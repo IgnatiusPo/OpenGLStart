@@ -127,7 +127,9 @@
     <None Include="res\shaders\SkyboxFrag.shader">
       <Filter>res\shaders</Filter>
     </None>
-    <None Include="res\shaders\Simple3floatVert.shader" />
+    <None Include="res\shaders\Simple3floatVert.shader">
+      <Filter>res\shaders</Filter>
+    </None>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Renderer.h">
@@ -185,6 +187,12 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="Macroses.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Uniform.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Material.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>

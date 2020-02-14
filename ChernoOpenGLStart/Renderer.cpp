@@ -73,6 +73,7 @@ namespace Renderer
 
 	std::vector<Texture> Textures;
 	std::vector<Cubemap> CubemapTextures;
+	std::vector<Material> Materials;
 
  
 
@@ -100,12 +101,14 @@ namespace Renderer
 	{
 		for (auto& object : scene._sceneObjects)
 		{
-			std::shared_ptr<Shader> _currentShader = object._shader;
-			_currentShader->Bind();
-			_currentShader->SetUniform("u_Model", object._modelMat);
-			_currentShader->SetUniform("u_Projection", projection);
-			_currentShader->SetUniform("u_View", view);
-			_currentShader->SetUniform("u_ViewPosition", WS_ViewPosition);
+			std::shared_ptr<Shader> CurrentShader = object._shader;
+			CurrentShader->Bind();
+			CurrentShader->SetUniform("u_Model", object._modelMat);
+			CurrentShader->SetUniform("u_Projection", projection);
+			CurrentShader->SetUniform("u_View", view);
+			CurrentShader->SetUniform("u_ViewPosition", WS_ViewPosition);
+			//todo maybe use here shared_ptr, as i do EVERYWHERE?
+			ApplyMaterial(object.GetMaterial(), CurrentShader.get());
 
 			//object.GetVB().Bind();
 			DrawInternal(object.GetVA(), 0, object.GetVB().GetCount());
@@ -161,7 +164,7 @@ namespace Renderer
 
 	Texture* GetTextureByID(TextureID ID)
 	{
-		if (ID >= Renderer::Textures.size() || Texture::InvalidTextureID)
+		if (ID >= Renderer::Textures.size() || ID == Texture::InvalidTextureID)
 		{
 			ASSERT(false);
 			return nullptr;
@@ -177,6 +180,70 @@ namespace Renderer
 			return nullptr;
 		}
 		return &Renderer::CubemapTextures[ID];
+	}
+
+	Material* GetMaterialByID(MaterialID ID)
+	{
+		if (ID >= Renderer::Materials.size() || ID == Material::InvalidMaterialID)
+		{
+			ASSERT(false);
+			return nullptr;
+		}
+		return &Renderer::Materials[ID];
+	}
+
+	MaterialID CreateDefaultPhongMaterial(const glm::vec3& ambient, const glm::vec3& diffuse, const glm::vec3& specular, const float& shininess, const glm::vec3& dirLight)
+	{
+		MaterialID NewID = (MaterialID)Renderer::Materials.size();
+		Renderer::Materials.emplace_back();
+		Material& NewMaterial = Renderer::Materials[NewID];
+		Uniform uAmbient;
+		uAmbient.name = "material.ambient";
+		uAmbient.type = UniformType::vec3f;
+		uAmbient.v3 = ambient;
+		NewMaterial.uniforms.push_back(uAmbient);
+
+		Uniform uDiffuse;
+		uDiffuse.name = "material.diffuse";
+		uDiffuse.type = UniformType::vec3f;
+		uDiffuse.v3 = diffuse;
+		NewMaterial.uniforms.push_back(uDiffuse);
+
+
+		Uniform uSpecular;
+		uSpecular.name = "material.specular";
+		uSpecular.type = UniformType::vec3f;
+		uSpecular.v3 = specular;
+		NewMaterial.uniforms.push_back(uSpecular);
+
+		Uniform uShininess;
+		uShininess.name = "material.shininess";
+		uShininess.type = UniformType::vec1f;
+		uShininess.v1 = glm::vec1(shininess);
+		NewMaterial.uniforms.push_back(uShininess);
+
+
+		Uniform uDirLight;
+		uDirLight.name = "dirLight.direction";
+		uDirLight.type = UniformType::vec3f;
+		uDirLight.v3 = dirLight;
+		NewMaterial.uniforms.push_back(uDirLight);
+
+		return NewID;
+	}
+
+	void ApplyMaterial(const MaterialID& MatID, Shader* shader)
+	{
+		if (MatID >= Renderer::Materials.size() || MatID == Material::InvalidMaterialID)
+		{
+			ASSERT(false);
+			return;
+		}
+		const Material& Mat = Renderer::Materials[MatID];
+		for (const auto& uniform : Mat.uniforms)
+		{
+			shader->SetUniform(uniform);
+		}
 	}
 
 }
