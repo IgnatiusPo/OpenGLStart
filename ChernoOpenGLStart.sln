@@ -1,9 +1,14 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
-# Visual Studio 15
-VisualStudioVersion = 15.0.27703.2000
+# Visual Studio Version 16
+VisualStudioVersion = 16.0.30114.105
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "ChernoOpenGLStart", "ChernoOpenGLStart\ChernoOpenGLStart.vcxproj", "{50207E80-2BFB-458F-BFD4-F35498F9F6DB}"
+	ProjectSection(ProjectDependencies) = postProject
+		{223DEA0B-5931-4231-A487-2BC2ADA62D56} = {223DEA0B-5931-4231-A487-2BC2ADA62D56}
+	EndProjectSection
+EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "TinyObjLoader", "Dependencies\TinyObjLoader\TinyObjLoader.vcxproj", "{223DEA0B-5931-4231-A487-2BC2ADA62D56}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -21,6 +26,14 @@ Global
 		{50207E80-2BFB-458F-BFD4-F35498F9F6DB}.Release|x64.Build.0 = Release|x64
 		{50207E80-2BFB-458F-BFD4-F35498F9F6DB}.Release|x86.ActiveCfg = Release|Win32
 		{50207E80-2BFB-458F-BFD4-F35498F9F6DB}.Release|x86.Build.0 = Release|Win32
+		{223DEA0B-5931-4231-A487-2BC2ADA62D56}.Debug|x64.ActiveCfg = Debug|x64
+		{223DEA0B-5931-4231-A487-2BC2ADA62D56}.Debug|x64.Build.0 = Debug|x64
+		{223DEA0B-5931-4231-A487-2BC2ADA62D56}.Debug|x86.ActiveCfg = Debug|Win32
+		{223DEA0B-5931-4231-A487-2BC2ADA62D56}.Debug|x86.Build.0 = Debug|Win32
+		{223DEA0B-5931-4231-A487-2BC2ADA62D56}.Release|x64.ActiveCfg = Release|x64
+		{223DEA0B-5931-4231-A487-2BC2ADA62D56}.Release|x64.Build.0 = Release|x64
+		{223DEA0B-5931-4231-A487-2BC2ADA62D56}.Release|x86.ActiveCfg = Release|Win32
+		{223DEA0B-5931-4231-A487-2BC2ADA62D56}.Release|x86.Build.0 = Release|Win32
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

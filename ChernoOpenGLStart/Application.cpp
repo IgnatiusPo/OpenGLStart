@@ -101,9 +101,17 @@ int Application::Init()
 	model = glm::rotate(model, glm::radians(-90.f), glm::vec3(1.f, 0.f, 0.f));
 	_scene._sceneObjects[1].SetModelMatrix(model);
 
+	//_scene.AddObjectToScene(LoadModel<ModelType::OBJ>("res/obj/Handgun_obj.obj"));
+	_scene.AddObjectToScene(LoadModel<ModelType::OBJ>("res/obj/rose.obj"));
+	model = glm::mat4(1.f);
+	model = glm::translate(model, glm::vec3(-50.f, 0.f, 0.f));
+	//model = glm::rotate(model, glm::radians(-90.f), glm::vec3(1.f, 0.f, 0.f));
+	_scene._sceneObjects[2].SetModelMatrix(model);
+
+	//LoadModel<ModelType::OBJ>("res/obj/Handgun_obj.obj");
 	//todo think about proper material and uniform handling
-	std::shared_ptr<Shader> DefaultShader = std::shared_ptr<Shader>(new Shader("res/shaders/BasicVert.shader", "res/shaders/PhongFrag.shader"));
-	DefaultShader->Bind();
+	//std::shared_ptr<Shader> DefaultShader = std::shared_ptr<Shader>(new Shader("res/shaders/BasicVert.shader", "res/shaders/PhongFrag.shader"));
+	//DefaultShader->Bind();
 
 	//material	
 	//DefaultShader->SetUniform("material.ambient", 1.0f, 0.5f, 0.31f);
@@ -120,21 +128,28 @@ int Application::Init()
 
 	MaterialID DefaultMaterialID = Renderer::CreateDefaultPhongMaterial(glm::vec3(1.0f, 0.5f, 0.31f), 
 		glm::vec3(1.0f, 0.5f, 0.31f), glm::vec3(0.2f, 0.2f, 0.2f), 32.f ,glm::vec3(-0.2f, -1.f, 0.3f));
-
-	_scene._sceneObjects[0]._shader = DefaultShader;
-	_scene._sceneObjects[1]._shader = DefaultShader;
-
 	_scene._sceneObjects[0].SetMaterial(DefaultMaterialID);
 	_scene._sceneObjects[1].SetMaterial(DefaultMaterialID);
+	_scene._sceneObjects[2].SetMaterial( DefaultMaterialID );
+
+	ShaderID PhongShaderID = Renderer::CreateShaderFromMaterialProperties(Renderer::GetMaterialByID(DefaultMaterialID)->properties);
+	_scene._sceneObjects[0].SetShader( PhongShaderID );
+	_scene._sceneObjects[1].SetShader( PhongShaderID );
+	_scene._sceneObjects[2].SetShader( PhongShaderID );
+
 
 
 	//special shaders
-	_FSQuadShader = std::shared_ptr<Shader>(new Shader("res/shaders/QuadVert.shader", "res/shaders/SimpleColorFrag.shader"));
-	_SkyboxShader = std::shared_ptr<Shader>(new Shader("res/shaders/SkyboxVert.shader", "res/shaders/SkyboxFrag.shader"));
+	//_FSQuadShader = std::shared_ptr<Shader>(new Shader("res/shaders/QuadVert.shader", "res/shaders/SimpleColorFrag.shader"));
+	//_SkyboxShader = std::shared_ptr<Shader>(new Shader("res/shaders/SkyboxVert.shader", "res/shaders/SkyboxFrag.shader"));
+
+	_FSQuadShaderID = Renderer::CreateShaderFromPath("res/shaders/QuadVert.shader", "res/shaders/SimpleColorFrag.shader");
+	_SkyboxShaderID = Renderer::CreateShaderFromPath("res/shaders/SkyboxVert.shader", "res/shaders/SkyboxFrag.shader");
+
 
 	//Testing here
-	TestShader = std::shared_ptr<Shader>(new Shader("res/shaders/Simple3floatVert.shader", "res/shaders/SimpleColorFrag.shader"));
-
+	//TestShaderID = std::shared_ptr<Shader>(new Shader("res/shaders/Simple3floatVert.shader", "res/shaders/SimpleColorFrag.shader"));
+	TestShaderID = Renderer::CreateShaderFromPath("res/shaders/Simple3floatVert.shader", "res/shaders/SimpleColorFrag.shader");
 	
 	return 0;
 }
@@ -214,7 +229,7 @@ void Application::DrawSkyBox(const glm::mat4& view, const glm::mat4& projection)
 	CubemapTex->Bind(0);
 
 
-	Renderer::DrawCube(projection, view, _SkyboxShader);
+	Renderer::DrawCube(projection, view, Renderer::GetShaderByID(_SkyboxShaderID));
 }
 
 Application::~Application()

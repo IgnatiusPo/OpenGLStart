@@ -1,14 +1,14 @@
 #pragma once
-#include "Mesh.h"
+#include "Model.h"
 #include <vector>
 class Scene
 {
 public:
-	std::vector<Mesh> _sceneObjects;
+	std::vector<Model> _sceneObjects;
 public:
 	Scene();
 	~Scene();
 
-	void AddObjectToScene(Mesh mesh);
+	void AddObjectToScene(const Model& mesh);
 };
 

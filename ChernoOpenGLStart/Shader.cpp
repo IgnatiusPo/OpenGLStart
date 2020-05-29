@@ -10,12 +10,12 @@
 
 
 
-Shader::Shader(const std::string& vertPath, const std::string& fragPath) : _vertPath(vertPath), _fragPath(fragPath), _RendererID(0)
+Shader::Shader(const std::string& vertShader, const std::string& fragShader) : _vertShader(vertShader), _fragShader(fragShader), _RendererID(0)
 {
 	//ShaderProgramSource source = ParseShader(filepath);
 	//_RendererID = CreateShader(source.VertexSource, source.FragmentSource);
 	
-	_RendererID = CreateShader(ParseShader(_vertPath), ParseShader(_fragPath));
+	_RendererID = CreateShader(vertShader, fragShader);
 }
 
 Shader::~Shader()

@@ -11,7 +11,7 @@ Scene::~Scene()
 {
 }
 
-void Scene::AddObjectToScene(Mesh mesh)
+void Scene::AddObjectToScene(const Model& model)
 {
-	_sceneObjects.push_back(mesh);
+	_sceneObjects.push_back(model);
 }

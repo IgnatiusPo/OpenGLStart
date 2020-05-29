@@ -15,9 +15,9 @@ class Application
 	float _lastFrame = 0.f;
 	Scene _scene;
 
-	std::shared_ptr<Shader> _FSQuadShader;
-	std::shared_ptr<Shader> _SkyboxShader;
-	std::shared_ptr<Shader> TestShader;
+	ShaderID _FSQuadShaderID;
+	ShaderID _SkyboxShaderID;
+	ShaderID TestShaderID;
 
 
 	TextureID _CubemapTexture = Texture::InvalidTextureID;

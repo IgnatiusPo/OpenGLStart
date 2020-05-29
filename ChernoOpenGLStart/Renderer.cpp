@@ -74,7 +74,7 @@ namespace Renderer
 	std::vector<Texture> Textures;
 	std::vector<Cubemap> CubemapTextures;
 	std::vector<Material> Materials;
-
+	std::vector<Shader> Shaders;
  
 
 	void Clear()
@@ -99,19 +99,31 @@ namespace Renderer
 
 	void Draw(const Scene& scene, const glm::mat4& view,const glm::mat4& projection, const glm::vec3& WS_ViewPosition)
 	{
-		for (auto& object : scene._sceneObjects)
+		for (auto& model : scene._sceneObjects)
 		{
-			std::shared_ptr<Shader> CurrentShader = object._shader;
-			CurrentShader->Bind();
-			CurrentShader->SetUniform("u_Model", object._modelMat);
-			CurrentShader->SetUniform("u_Projection", projection);
-			CurrentShader->SetUniform("u_View", view);
-			CurrentShader->SetUniform("u_ViewPosition", WS_ViewPosition);
-			//todo maybe use here shared_ptr, as i do EVERYWHERE?
-			ApplyMaterial(object.GetMaterial(), CurrentShader.get());
+			//use unite shader
+			for (auto& mesh : model._meshes)
+			{
+				Shader* CurrentShader = nullptr;
+				if (model._uniteShader != Shader::InvalidShaderID)
+				{
+					CurrentShader = GetShaderByID(model._uniteShader);
+				}
+				else
+				{
+					CurrentShader = GetShaderByID(mesh._shaderID);
+				}
+				CurrentShader->Bind();
+				CurrentShader->SetUniform("u_Model", mesh._modelMat);
+				CurrentShader->SetUniform("u_Projection", projection);
+				CurrentShader->SetUniform("u_View", view);
+				CurrentShader->SetUniform("u_ViewPosition", WS_ViewPosition);
+				//todo maybe use here shared_ptr, as i do EVERYWHERE?
+				ApplyMaterial(mesh.GetMaterial(), CurrentShader);
 
-			//object.GetVB().Bind();
-			DrawInternal(object.GetVA(), 0, object.GetVB().GetCount());
+				//object.GetVB().Bind();
+				DrawInternal(mesh.GetVA(), 0, mesh.GetVB().GetCount());
+			}
 		}
 	}
 
@@ -127,7 +139,7 @@ namespace Renderer
 		GLCall(glDrawArrays(GL_TRIANGLES, 0, QuadVB.GetCount()));
 	}
 
-	void DrawCube(glm::mat4 modelMat, glm::mat4 projectionMat, glm::mat4 viewMat, std::shared_ptr<Shader> shader)
+	void DrawCube(glm::mat4 modelMat, glm::mat4 projectionMat, glm::mat4 viewMat, Shader* shader)
 	{
 		shader->Bind();
 		shader->SetUniform("u_Model", modelMat);
@@ -138,7 +150,7 @@ namespace Renderer
 		GLCall(glDrawArrays(GL_TRIANGLES, 0, CubeVB.GetCount()));
 	}
 
-	void DrawCube(glm::mat4 projectionMat, glm::mat4 viewMat, std::shared_ptr<Shader> shader)
+	void DrawCube(glm::mat4 projectionMat, glm::mat4 viewMat, Shader* shader)
 	{
 		shader->Bind();
 		shader->SetUniform("u_Projection", projectionMat);
@@ -191,12 +203,26 @@ namespace Renderer
 		}
 		return &Renderer::Materials[ID];
 	}
+	Shader* GetShaderByID(ShaderID ID)
+	{
+		if (ID >= Renderer::Shaders.size() || ID == Shader::InvalidShaderID)
+		{
+			ASSERT(false);
+			return nullptr;
+		}
+		return &Renderer::Shaders[ID];
+
+	}
 
 	MaterialID CreateDefaultPhongMaterial(const glm::vec3& ambient, const glm::vec3& diffuse, const glm::vec3& specular, const float& shininess, const glm::vec3& dirLight)
 	{
 		MaterialID NewID = (MaterialID)Renderer::Materials.size();
 		Renderer::Materials.emplace_back();
 		Material& NewMaterial = Renderer::Materials[NewID];
+
+		NewMaterial.properties._mask |= MaterialFeatures::eDefaultPhongModel;
+		NewMaterial.properties._mask |= MaterialFeatures::eHasNormal;
+
 		Uniform uAmbient;
 		uAmbient.name = "material.ambient";
 		uAmbient.type = UniformType::vec3f;
@@ -229,6 +255,46 @@ namespace Renderer
 		uDirLight.v3 = dirLight;
 		NewMaterial.uniforms.push_back(uDirLight);
 
+		return NewID;
+	}
+
+	MaterialID CreateNewMaterial()
+	{
+		MaterialID NewID = (MaterialID)Renderer::Materials.size();
+		Renderer::Materials.emplace_back();
+		return NewID;
+	}
+	
+	ShaderID CreateShaderFromMaterialProperties(MaterialProperties props)
+	{
+		ShaderID NewID = (ShaderID)Renderer::Shaders.size();
+		std::string version = SHADER_VERSION;
+		std::string vertexShader = version + '\n';
+		std::string fragmentShader = version + '\n';
+		//todo
+		if ( props._mask & MaterialFeatures::eDefaultPhongModel )
+		{
+			if (props._mask & MaterialFeatures::eHasNormal)
+			{
+				vertexShader += Shader::ParseShader("res/shaders/BasicVert.shader");
+				fragmentShader += Shader::ParseShader("res/shaders/PhongFrag.shader");
+				Renderer::Shaders.emplace_back(vertexShader, fragmentShader);
+				return NewID;
+			}
+		}
+		ASSERT(false);
+		return Shader::InvalidShaderID;
+	}
+	ShaderID CreateShaderFromPath(const char* vertPath, const char* fragmentPath)
+	{
+		std::string version = SHADER_VERSION;
+		std::string vertexShader = version + '\n';
+		std::string fragmentShader = version + '\n';
+		vertexShader += Shader::ParseShader(vertPath);
+		fragmentShader += Shader::ParseShader(fragmentPath);
+
+		ShaderID NewID = (ShaderID)Renderer::Shaders.size();
+		Renderer::Shaders.emplace_back(vertexShader, fragmentShader);
 		return NewID;
 	}
 

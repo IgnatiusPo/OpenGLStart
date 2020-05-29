@@ -1,62 +1,27 @@
-//#pragma once
-//#include "glm/mat4x4.hpp"
-//#include <vector>
-//enum class ModelType
-//{
-//	STL,
-//	FBX,
-//};
-//
+#pragma once
+#include "Mesh.h"
+
+class Model
+{
+public:
+	std::vector<Mesh> _meshes;
+
+	void AddMesh(const Mesh& mesh);
+
+	void SetModelMatrix(const glm::mat4& ModelMatrix);
+	void SetMaterial(const MaterialID& ID);
+	
+	//sets shader to use for ALL of the submeshes. Usefull
+	void SetShader(const ShaderID& ID);
+	ShaderID _uniteShader = Shader::InvalidShaderID;
+};
+
+
+
+
+template<ModelType T>
+Model LoadModel(std::string path);
+
+//todo maybe
 //template<ModelType T>
-//class Model;
-//
-//template<>
-//class Model<ModelType::STL>
-//{
-//	struct Vertex
-//	{
-//		glm::vec3 _position;
-//		glm::vec3 _normal;
-//	};
-//	std::vector<Vertex> _vertexData;
-//
-//	glm::mat4 _modelMat = glm::mat4(1.f);
-//public:
-//	Model()
-//	{
-//
-//	};
-//	void LoadModel(std::string path, Mesh<ModelType::STL>* mesh)
-//	{
-//		
-//	};
-//	~Model()
-//	{
-//
-//	};
-//
-//private:
-//
-//};
-
-//todo
-//template<>
-//class Model<ModelType::FBX>
-//{
-//	struct Vertex
-//	{
-//		glm::vec3 _position;
-//		glm::vec3 _normal;
-//		glm::vec3 _UV;
-//	};
-//	glm::mat4 _modelMat = glm::mat4(1.f);
-//public:
-//	Model();
-//	void LoadModel(std::string path, );
-//	~Model();
-//
-//private:
-//
-//};
-
-
+//MaterialID CreateDefaultMeshMaterial();

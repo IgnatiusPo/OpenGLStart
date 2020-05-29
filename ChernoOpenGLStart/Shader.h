@@ -9,17 +9,18 @@ struct ShaderProgramSource
 	std::string FragmentSource;
 };
 
+typedef int ShaderID;
 
 class Shader
 {
 private:
-	std::string _vertPath;
-	std::string _fragPath;
+	std::string _vertShader;
+	std::string _fragShader;
 	unsigned int _RendererID;
 	std::unordered_map<std::string, int> _UniformLocationCache;
 
 public:
-	Shader(const std::string& vertPath, const std::string& fragPath);
+	Shader(const std::string& vertShader, const std::string& fragShader);
 	~Shader();
 
 	void Bind() const;
@@ -44,13 +45,15 @@ public:
 
 	void SetUniform(const Uniform& uniform);
 
+	const static ShaderID InvalidShaderID = -1;
+	//const static ShaderID SpecialShaderID = -2;
 
 public:
 //	static Shader* GetDepthOnlyShader();
 	//virtual void PrepareForDraw();
+	static std::string ParseShader(const std::string& filepath);
 private:
 	//ShaderProgramSource ParseShader(const std::string& filepath);
-	std::string ParseShader(const std::string& filepath);
 
 	unsigned int CompileShader(unsigned int type, const std::string& source);
 	unsigned int CreateShader(const std::string& vertexShader, const std::string& fragmentShader);

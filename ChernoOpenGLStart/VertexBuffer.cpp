@@ -46,7 +46,7 @@ void VertexBuffer::BindData(const void* data,const unsigned int& size, unsigned 
 	GLCall(glBufferData(GL_ARRAY_BUFFER, size, data, GL_STATIC_DRAW));
 }
 
-void VertexBuffer::Init(const void* data, const unsigned int& size, unsigned int count)
+void VertexBuffer::Init(const void* data, const unsigned int& size, const unsigned int& count)
 {
 	ASSERT(_RendererID == 0); //shouldn't be already initialized
 

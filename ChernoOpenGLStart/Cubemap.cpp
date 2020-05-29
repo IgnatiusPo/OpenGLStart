@@ -5,7 +5,6 @@
 #include "Macroses.h"
 #include <GL/glew.h>
 #include <iostream>
-#include <string>
 Cubemap::Cubemap() 
 {
 

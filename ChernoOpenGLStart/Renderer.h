@@ -31,21 +31,28 @@
 class Shader;
 namespace Renderer
 {
+	static const char* SHADER_VERSION = "#version 330 core";
+
 	//class Shader* _currentShader;
 	void Init();
 	void Draw(const Scene& scene, const glm::mat4& view, const glm::mat4& projection, const glm::vec3& WS_ViewPosition);
 	void Clear();
 	void DrawInternal(const VertexArray& va, unsigned int first, unsigned int count);
 	void DrawQuadFS();
-	void DrawCube(glm::mat4 modelMat, glm::mat4 projectionMat, glm::mat4 viewMat, std::shared_ptr<Shader> shader);
-	void DrawCube(glm::mat4 projectionMat, glm::mat4 viewMat, std::shared_ptr<Shader> shader);
+	void DrawCube(glm::mat4 modelMat, glm::mat4 projectionMat, glm::mat4 viewMat, Shader* shader);
+	void DrawCube(glm::mat4 projectionMat, glm::mat4 viewMat, Shader* shader);
 
 	TextureID CreateTexture(const std::string& path);
 	TextureID CreateCubemapTexture(std::vector<std::string> faces);
 	Texture* GetTextureByID(TextureID ID);
 	Cubemap* GetCubemapTextureByID(TextureID ID);
 	Material* GetMaterialByID(MaterialID ID);
+	Shader* GetShaderByID(ShaderID ID);
+
 	MaterialID CreateDefaultPhongMaterial(const glm::vec3& ambient, const glm::vec3& diffuse, const glm::vec3& specular, const float& shininess, const glm::vec3& dirLight);
+	MaterialID CreateNewMaterial();
+	ShaderID CreateShaderFromMaterialProperties(MaterialProperties props);
+	ShaderID CreateShaderFromPath(const char* vertPath, const char* fragmentPath);
 	void ApplyMaterial(const MaterialID& MatID, Shader* shader);
 
 	static const float QuadPositions[] = { //vertex attributes for a quad that fills the entire screen in NDC.
@@ -113,4 +120,5 @@ namespace Renderer
 	extern std::vector<Texture> Textures;
 	extern std::vector<Cubemap> CubemapTextures;
 	extern std::vector<Material> Materials;
+	extern std::vector<Shader> Shaders;
 };
