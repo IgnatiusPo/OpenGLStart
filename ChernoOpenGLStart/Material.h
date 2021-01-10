@@ -4,10 +4,13 @@
 
 typedef uint16_t MaterialFeatureMask;
 
-enum  MaterialFeatures : uint16_t
+enum  MaterialFeatures : MaterialFeatureMask
 {
 	eDefaultPhongModel = 1,
 	eHasNormal = 1 << 1,
+	eHasUV = 1 << 2,
+	eHasDiffuseTexture = 1 << 3,
+	eShadowPass = 1 << 4
 };
 struct MaterialProperties
 {

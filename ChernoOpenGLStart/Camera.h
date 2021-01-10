@@ -24,8 +24,8 @@ public:
 	float _zoom;
 	float _cameraSpeed;
 public:
-	Camera(glm::vec3 position = glm::vec3(0.0f, 0.0f, 0.0f), glm::vec3 front = glm::vec3(0.0f, -1.0f, 0.0f), glm::vec3 up = glm::vec3(0.0f, 1.0f, 0.0f), 
-		float yaw = YAW, float pitch = PITCH, float sensitivity = 0.1f, float zoom = 45.f, float cameraSpeed = 20.f);
+	Camera(glm::vec3 position = glm::vec3(0.0f, 0.0f, 0.0f), glm::vec3 front = glm::vec3(0.0f, 0.0f, -1.0f), glm::vec3 up = glm::vec3(0.0f, 1.0f, 0.0f), 
+		float yaw = YAW, float pitch = PITCH, float sensitivity = 0.1f, float zoom = 45.f, float cameraSpeed = 200.f);
 	
 	void ProcessKeyboardInput(CameraMovement direction, float deltaTime);
 	void ProcessMouseInput(float xOffset, float yOffset);

@@ -14,9 +14,9 @@ enum class TextureType
 
 class Texture
 {
-	unsigned int _RendererID = 0;
+	unsigned int _RendererID = -1;
 public:
-	Texture();
+	//Texture();
 	Texture(const std::string& path);
 
 	void Init(const std::string& path);

@@ -6,6 +6,7 @@
 #include <fstream>
 #include <string>
 #include <sstream>
+#include "Renderer.h"
 
 
 
@@ -110,6 +111,13 @@ void Shader::SetUniform(const std::string& name, const glm::mat3& uniform)
 	GLCall(glUniformMatrix3fv(GetUniformLocation(name), 1, GL_FALSE,  &uniform[0][0]));
 }
 
+void Shader::SetUniform(const std::string& name, TextureUniform tex)
+{
+	Texture* texture = Renderer::GetTextureByID(tex.textureID);
+	SetUniform(name, glm::ivec1((unsigned int)tex.textureClass));
+	texture->Bind((unsigned int)tex.textureClass);
+}
+
 void Shader::SetUniform(const Uniform& uniform)
 {
 	UniformType Type = uniform.type;
@@ -154,6 +162,9 @@ void Shader::SetUniform(const Uniform& uniform)
 	case UniformType::vec4i: {
 		SetUniform(uniform.name, uniform.iv4);
 		break;
+	}
+	case UniformType::tex: {
+		SetUniform(uniform.name, uniform.tex);
 	}
 	}
 }
@@ -273,7 +284,10 @@ int Shader::GetUniformLocation(const std::string& name)
 
 	GLCall(int location = glGetUniformLocation(_RendererID, name.c_str()));
 	if (location == -1)
-		std::cerr << "Warning: uniform" << name << " doesn't exist! " << std::endl;
+	{
+		//todo
+		//std::cerr << "Warning: uniform" << name << " doesn't exist! " << std::endl;
+	}
 	else
 		_UniformLocationCache.insert(std::make_pair(name, location));
 		//_UniformLocationCache[name] = location; 

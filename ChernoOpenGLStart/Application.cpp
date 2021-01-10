@@ -75,6 +75,27 @@ int Application::Init()
 
 	glfwSwapInterval(1);
 
+	//init shadow depth texture
+	//todo maybe i should create Texture object here?
+	glGenFramebuffers(1, &shadowMapFBO);
+
+	GLCall(glGenTextures(1, &shadowMapTexture));
+	GLCall(glBindTexture(GL_TEXTURE_2D, shadowMapTexture));
+
+	GLCall(glTexImage2D(GL_TEXTURE_2D, 0, GL_DEPTH_COMPONENT, _shadowWidth, _shadowHeight, 0, GL_DEPTH_COMPONENT, GL_FLOAT, NULL));
+
+	GLCall(glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST));
+	GLCall(glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST));
+	GLCall(glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT));
+	GLCall(glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT));
+
+	GLCall(glBindFramebuffer(GL_FRAMEBUFFER, shadowMapFBO));
+	GLCall(glFramebufferTexture2D(GL_FRAMEBUFFER, GL_DEPTH_ATTACHMENT, GL_TEXTURE_2D, shadowMapTexture, 0));
+	GLCall(glDrawBuffer(GL_NONE));
+	GLCall(glReadBuffer(GL_NONE));
+	GLCall(glBindFramebuffer(GL_FRAMEBUFFER, 0))
+
+
 	Renderer::Init();
 	
 	//skybox
@@ -108,41 +129,20 @@ int Application::Init()
 	//model = glm::rotate(model, glm::radians(-90.f), glm::vec3(1.f, 0.f, 0.f));
 	_scene._sceneObjects[2].SetModelMatrix(model);
 
-	//LoadModel<ModelType::OBJ>("res/obj/Handgun_obj.obj");
-	//todo think about proper material and uniform handling
-	//std::shared_ptr<Shader> DefaultShader = std::shared_ptr<Shader>(new Shader("res/shaders/BasicVert.shader", "res/shaders/PhongFrag.shader"));
-	//DefaultShader->Bind();
+	_scene.AddObjectToScene(LoadModel<ModelType::OBJ>("res/obj/sponza.obj"));
+	model = glm::mat4(1.f);
+	model = glm::translate(model, glm::vec3(-100.f, 0.f, 0.f));
+	//model = glm::rotate(model, glm::radians(-90.f), glm::vec3(1.f, 0.f, 0.f));
+	_scene._sceneObjects[3].SetModelMatrix(model);
 
-	//material	
-	//DefaultShader->SetUniform("material.ambient", 1.0f, 0.5f, 0.31f);
-	//DefaultShader->SetUniform("material.diffuse", 1.0f, 0.5f, 0.31f);
-	//DefaultShader->SetUniform("material.specular", 0.2f, 0.2f, 0.2f);
-	//DefaultShader->SetUniform("material.shininess", 32.f);
-
-	////directional light
-	//DefaultShader->SetUniform("dirLight.direction", -0.2f, -1.f, 0.3f);
-
-	//DefaultShader->SetUniform("dirLight.ambient", 0.05f, 0.05f, 0.05f);
-	//DefaultShader->SetUniform("dirLight.diffuse", .5f, .5f, .5f);
-	//DefaultShader->SetUniform("dirLight.specular", 1.5f, 1.5f, 1.5f);
 
 	MaterialID DefaultMaterialID = Renderer::CreateDefaultPhongMaterial(glm::vec3(1.0f, 0.5f, 0.31f), 
-		glm::vec3(1.0f, 0.5f, 0.31f), glm::vec3(0.2f, 0.2f, 0.2f), 32.f ,glm::vec3(-0.2f, -1.f, 0.3f));
+		glm::vec3(1.0f, 0.5f, 0.31f), glm::vec3(0.2f, 0.2f, 0.2f), 32.f);
 	_scene._sceneObjects[0].SetMaterial(DefaultMaterialID);
 	_scene._sceneObjects[1].SetMaterial(DefaultMaterialID);
-	_scene._sceneObjects[2].SetMaterial( DefaultMaterialID );
-
-	ShaderID PhongShaderID = Renderer::CreateShaderFromMaterialProperties(Renderer::GetMaterialByID(DefaultMaterialID)->properties);
-	_scene._sceneObjects[0].SetShader( PhongShaderID );
-	_scene._sceneObjects[1].SetShader( PhongShaderID );
-	_scene._sceneObjects[2].SetShader( PhongShaderID );
-
 
 
 	//special shaders
-	//_FSQuadShader = std::shared_ptr<Shader>(new Shader("res/shaders/QuadVert.shader", "res/shaders/SimpleColorFrag.shader"));
-	//_SkyboxShader = std::shared_ptr<Shader>(new Shader("res/shaders/SkyboxVert.shader", "res/shaders/SkyboxFrag.shader"));
-
 	_FSQuadShaderID = Renderer::CreateShaderFromPath("res/shaders/QuadVert.shader", "res/shaders/SimpleColorFrag.shader");
 	_SkyboxShaderID = Renderer::CreateShaderFromPath("res/shaders/SkyboxVert.shader", "res/shaders/SkyboxFrag.shader");
 
@@ -164,21 +164,48 @@ void Application::Tick()
 	glfwPollEvents();
 	ProcessInput();
 	
+	//shadow
+	//todo * 1000.f cuz for now i do care about position
+	glm::mat4 shadowView = myLookAt(glm::vec3(-0.2f, 1.f, -0.3f) * 1000.f, glm::vec3(0.0f, 0.0f, 0.0f), glm::vec3(0.0f, 1.0f, 0.0f));
+	//todo not sure about near plane here
+	glm::mat4 shadowProj = glm::ortho(-2000.f, 2000.f, -1800.f, 1800.f, -1000.f, 10000.f);
+
+
+
+	//scene
 	glm::mat4 view = glm::mat4(1.0f);
 	view = _camera.GetViewMatrix();
 
 	glm::mat4 projection = glm::mat4(1.0f);
-	projection = glm::perspective(glm::radians(_fov), _wWidth / _wHeight, 0.1f, 500.f); //todo setup near and far properly
+	projection = glm::perspective(glm::radians(_fov), _wWidth / _wHeight, 0.1f, 4000.f); //todo setup near and far properly
+
+
+	//projection = shadowProj;
+	//view = shadowView;
 
 	GLCall(glEnable(GL_DEPTH_TEST));
 	GLCall(glDepthFunc(GL_LESS));
 	//GLCall(glEnable(GL_BLEND));
 	//GLCall(glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA));
 
+
+	GLCall(glViewport(0, 0, _shadowWidth, _shadowHeight));
+	GLCall(glBindFramebuffer(GL_FRAMEBUFFER, shadowMapFBO));
+	GLCall(glClear(GL_DEPTH_BUFFER_BIT));
+
+	Renderer::DrawShadowPass(_scene, shadowView, shadowProj, _camera._position, _dirLightDirection);
+
+	GLCall(glBindFramebuffer(GL_FRAMEBUFFER, 0));
+	GLCall(glViewport(0, 0, _wWidth, _wHeight));
+
+	//todo for now it's ALWAYS texture unit 0
+	GLCall(glActiveTexture(GL_TEXTURE0));
+	GLCall(glBindTexture(GL_TEXTURE_2D, shadowMapTexture));
 	//todo: maybe i can calculate everything in viewSpace so i don't need to care about ViewPosition in World Space?
-	Renderer::Draw(_scene, view, projection, _camera._position);
+	//todo uniformbufferobj
+	Renderer::Draw(_scene, view, projection, _camera._position, _dirLightDirection, shadowView, shadowProj);
 
-
+	
 	GLCall(glDepthFunc(GL_LEQUAL));
 	DrawSkyBox(view, projection);
 	//Renderer::DrawCube(glm::mat4(1.f), projection, view, TestCubeShader);

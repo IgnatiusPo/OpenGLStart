@@ -33,8 +33,7 @@ struct Vertex<ModelType::OBJ>
 {
 	glm::vec3 _position;
 	glm::vec3 _normal;
-	//todo
-	//glm::vec2 _texCoord;
+	glm::vec2 _texCoord;
 };
 
 //class SubMesh
@@ -93,7 +92,7 @@ public:
 	glm::mat4 _modelMat = glm::mat4(1.f);
 	//std::shared_ptr<class Shader> _shader;
 	//todo temporary: write GetShaderByMaterialParams
-	ShaderID _shaderID = Shader::InvalidShaderID;
+	//ShaderID _shaderID = Shader::InvalidShaderID;
 };
 
 

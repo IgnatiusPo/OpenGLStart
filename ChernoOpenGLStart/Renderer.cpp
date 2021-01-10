@@ -3,7 +3,6 @@
 #include <GL/glew.h>
 #include "VertexBufferLayout.h"
 #include "VertexArray.h"
-
 #include "Macroses.h"
 //#include <iostream>
 //
@@ -75,6 +74,7 @@ namespace Renderer
 	std::vector<Cubemap> CubemapTextures;
 	std::vector<Material> Materials;
 	std::vector<Shader> Shaders;
+	std::map<MaterialFeatureMask, ShaderID> MaterialFeatureToShader;
  
 
 	void Clear()
@@ -84,6 +84,7 @@ namespace Renderer
 
 	void Init()
 	{
+		// init vertex arrays for quad and cube
 		VertexBufferLayout QuadLayout;
 		QuadLayout.Push<float>(2);
 		QuadVB.Init(QuadPositions, sizeof(QuadPositions), (sizeof(QuadPositions) / sizeof(float)) / 2);
@@ -95,9 +96,11 @@ namespace Renderer
 		CubeVB.Init(CubePositions, sizeof(CubePositions), (sizeof(CubePositions) / sizeof(float)) / 3);
 		CubeVA.AddBuffer(CubeVB, CubeLayout);
 
+
+		
 	}
 
-	void Draw(const Scene& scene, const glm::mat4& view,const glm::mat4& projection, const glm::vec3& WS_ViewPosition)
+	void DrawShadowPass(const Scene& scene, const glm::mat4& view, const glm::mat4& projection, const glm::vec3& WS_ViewPosition, const glm::vec3& dirLightDirection)
 	{
 		for (auto& model : scene._sceneObjects)
 		{
@@ -105,19 +108,45 @@ namespace Renderer
 			for (auto& mesh : model._meshes)
 			{
 				Shader* CurrentShader = nullptr;
-				if (model._uniteShader != Shader::InvalidShaderID)
-				{
-					CurrentShader = GetShaderByID(model._uniteShader);
-				}
-				else
-				{
-					CurrentShader = GetShaderByID(mesh._shaderID);
-				}
+
+				MaterialProperties props = GetMaterialByID(mesh.GetMaterial())->properties;
+				props._mask |= eShadowPass;
+				CurrentShader = GetShaderByID(GetShaderIDFromMaterialProps(props));
+
+				CurrentShader->Bind();
+				CurrentShader->SetUniform("u_Model", mesh._modelMat);
+				CurrentShader->SetUniform("u_Projection", projection);
+				CurrentShader->SetUniform("u_View", view);
+				//CurrentShader->SetUniform("u_ViewPosition", WS_ViewPosition);
+				//CurrentShader->SetUniform("u_DirLight.direction", dirLightDirection);
+
+				ApplyMaterial(mesh.GetMaterial(), CurrentShader);
+
+				DrawInternal(mesh.GetVA(), 0, mesh.GetVB().GetCount());
+			}
+		}
+	}
+
+	void Draw(const Scene& scene, const glm::mat4& view,const glm::mat4& projection, const glm::vec3& WS_ViewPosition, const glm::vec3& dirLightDirection, const glm::mat4 lightView, const glm::mat4 lightProj)
+	{
+		for (auto& model : scene._sceneObjects)
+		{
+			//use unite shader
+			for (auto& mesh : model._meshes)
+			{
+				Shader* CurrentShader = nullptr;
+
+				const MaterialProperties & props = GetMaterialByID(mesh.GetMaterial())->properties;
+				CurrentShader = GetShaderByID(GetShaderIDFromMaterialProps(props));
+				
 				CurrentShader->Bind();
 				CurrentShader->SetUniform("u_Model", mesh._modelMat);
 				CurrentShader->SetUniform("u_Projection", projection);
 				CurrentShader->SetUniform("u_View", view);
 				CurrentShader->SetUniform("u_ViewPosition", WS_ViewPosition);
+				CurrentShader->SetUniform("u_DirLight.direction", dirLightDirection);
+				CurrentShader->SetUniform("u_LightView", lightView);
+				CurrentShader->SetUniform("u_LightProjection", lightProj);
 				//todo maybe use here shared_ptr, as i do EVERYWHERE?
 				ApplyMaterial(mesh.GetMaterial(), CurrentShader);
 
@@ -214,7 +243,7 @@ namespace Renderer
 
 	}
 
-	MaterialID CreateDefaultPhongMaterial(const glm::vec3& ambient, const glm::vec3& diffuse, const glm::vec3& specular, const float& shininess, const glm::vec3& dirLight)
+	MaterialID CreateDefaultPhongMaterial(const glm::vec3& ambient, const glm::vec3& diffuse, const glm::vec3& specular, const float& shininess)
 	{
 		MaterialID NewID = (MaterialID)Renderer::Materials.size();
 		Renderer::Materials.emplace_back();
@@ -248,13 +277,6 @@ namespace Renderer
 		uShininess.v1 = glm::vec1(shininess);
 		NewMaterial.uniforms.push_back(uShininess);
 
-
-		Uniform uDirLight;
-		uDirLight.name = "dirLight.direction";
-		uDirLight.type = UniformType::vec3f;
-		uDirLight.v3 = dirLight;
-		NewMaterial.uniforms.push_back(uDirLight);
-
 		return NewID;
 	}
 
@@ -265,25 +287,70 @@ namespace Renderer
 		return NewID;
 	}
 	
-	ShaderID CreateShaderFromMaterialProperties(MaterialProperties props)
+	ShaderID GetShaderIDFromMaterialProps(const MaterialProperties& props)
 	{
+		auto shaderIt = MaterialFeatureToShader.find(props._mask);
+		if (shaderIt != MaterialFeatureToShader.end())
+		{
+			return shaderIt->second;
+		}
+
 		ShaderID NewID = (ShaderID)Renderer::Shaders.size();
 		std::string version = SHADER_VERSION;
 		std::string vertexShader = version + '\n';
 		std::string fragmentShader = version + '\n';
 		//todo
-		if ( props._mask & MaterialFeatures::eDefaultPhongModel )
+		//std::string additionalInfo;
+		//if ( props._mask & MaterialFeatures::eDefaultPhongModel )
+		//{
+		//	if (props._mask & MaterialFeatures::eHasNormal)
+		//	{
+		//		if ( props._mask & MaterialFeatures::eHasUV )
+		//		{
+		//			vertexShader = vertexShader + "#define HAS_TEXCOORD 1" + '\n';
+		//			fragmentShader = fragmentShader + "#define HAS_TEXCOORD 1" + '\n';
+		//		}
+		//		vertexShader += Shader::ParseShader("res/shaders/BasicVert.shader");
+		//		fragmentShader += Shader::ParseShader("res/shaders/PhongFrag.shader");
+		//		Renderer::Shaders.emplace_back(vertexShader, fragmentShader);
+		//	}
+		//}
+		//else
+		//{
+
+		if (props._mask & MaterialFeatures::eShadowPass)
 		{
-			if (props._mask & MaterialFeatures::eHasNormal)
-			{
-				vertexShader += Shader::ParseShader("res/shaders/BasicVert.shader");
-				fragmentShader += Shader::ParseShader("res/shaders/PhongFrag.shader");
-				Renderer::Shaders.emplace_back(vertexShader, fragmentShader);
-				return NewID;
-			}
+			vertexShader = vertexShader + "#define SHADOW_PASS 1" + '\n';
+			fragmentShader = fragmentShader + "#define SHADOW_PASS 1" + '\n';
 		}
-		ASSERT(false);
-		return Shader::InvalidShaderID;
+		
+		if (props._mask & MaterialFeatures::eHasNormal)
+		{
+			if (props._mask & MaterialFeatures::eHasUV)
+			{
+				vertexShader = vertexShader + "#define HAS_TEXCOORD 1" + '\n';
+				fragmentShader = fragmentShader + "#define HAS_TEXCOORD 1" + '\n';
+
+				if (props._mask & MaterialFeatures::eHasDiffuseTexture)
+				{
+					fragmentShader = fragmentShader + "#define HAS_DIFFUSE_TEXTURE 1" + '\n';
+				}
+			}
+			vertexShader += Shader::ParseShader("res/shaders/BasicVert.shader");
+			fragmentShader += Shader::ParseShader("res/shaders/PhongFrag.shader");
+			Renderer::Shaders.emplace_back(vertexShader, fragmentShader);
+		}
+		else
+		{
+			ASSERT(false);
+			return Shader::InvalidShaderID;
+		}
+
+
+		//}
+
+		MaterialFeatureToShader.insert({ props._mask, NewID });
+		return NewID;
 	}
 	ShaderID CreateShaderFromPath(const char* vertPath, const char* fragmentPath)
 	{

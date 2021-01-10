@@ -148,6 +148,7 @@
     <ClCompile Include="stb_image.cpp" />
     <ClCompile Include="StlData.cpp" />
     <ClCompile Include="Texture.cpp" />
+    <ClCompile Include="Uniform.cpp" />
     <ClCompile Include="VertexArray.cpp" />
     <ClCompile Include="VertexBuffer.cpp" />
     <ClCompile Include="VertexBufferLayout.cpp" />

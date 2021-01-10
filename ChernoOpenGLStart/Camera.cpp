@@ -34,6 +34,9 @@ void Camera::ProcessMouseInput(float xOffset, float yOffset)
 {
 	xOffset *= _sensitivity;
 	yOffset *= _sensitivity;
+	//_yaw = xOffset;
+	//_pitch = -yOffset;
+
 	_yaw += xOffset;
 	_pitch += yOffset;
 
@@ -61,13 +64,25 @@ glm::mat4 Camera::GetViewMatrix()
 
 void Camera::UpdateCameraVectors()
 {
+	//todo normal rotation
 	//forward vector
 	glm::vec3 front;
 	front.x = cos(glm::radians(_pitch)) * cos(glm::radians(_yaw));
 	front.y = sin(glm::radians(_pitch));
 	front.z = cos(glm::radians(_pitch)) * sin(glm::radians(_yaw));
 	_forward = glm::normalize(front);
+	//glm::mat3 rotX = glm::mat3(1.f);
+	//rotX[0] = glm::vec3(1.f, 0.f, 0.f);
+	//rotX[1] = glm::vec3(0.f, glm::cos(glm::radians(_pitch)), glm::sin(glm::radians(_pitch)));
+	//rotX[2] = glm::vec3(0.f, -glm::sin(glm::radians(_pitch)), glm::cos(glm::radians(_pitch)));
 
+	//glm::mat3 rotY = glm::mat3(1.f);
+	//rotY[0] = glm::vec3(glm::cos(glm::radians(_yaw)), 0.f, -glm::sin(glm::radians(_yaw)));
+	//rotY[1] = glm::vec3(0.f, 1.f, 0.f);
+	//rotY[2] = glm::vec3(glm::sin(glm::radians(_yaw)), 0.f, glm::cos(glm::radians(_yaw)));
+
+	//_forward = _forward * rotX * rotY;
+	//_forward = glm::normalize(_forward);
 	//right and up
 	_right = glm::normalize(glm::cross(_forward, _worldUp));
 	_up = glm::normalize(glm::cross(_right, _forward));

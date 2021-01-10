@@ -11,9 +11,6 @@ public:
 	void SetModelMatrix(const glm::mat4& ModelMatrix);
 	void SetMaterial(const MaterialID& ID);
 	
-	//sets shader to use for ALL of the submeshes. Usefull
-	void SetShader(const ShaderID& ID);
-	ShaderID _uniteShader = Shader::InvalidShaderID;
 };
 
 

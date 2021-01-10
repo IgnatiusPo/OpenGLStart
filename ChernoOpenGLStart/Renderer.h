@@ -6,6 +6,7 @@
 #include "Cubemap.h"
 #include "Material.h"
 #include <vector>
+#include <map>
 
 
 //#define ASSERT(x) if(!(x)) __debugbreak();
@@ -33,9 +34,12 @@ namespace Renderer
 {
 	static const char* SHADER_VERSION = "#version 330 core";
 
+
 	//class Shader* _currentShader;
 	void Init();
-	void Draw(const Scene& scene, const glm::mat4& view, const glm::mat4& projection, const glm::vec3& WS_ViewPosition);
+	//todo global uniform buffer for lightDir
+	void DrawShadowPass(const Scene& scene, const glm::mat4& view, const glm::mat4& projection, const glm::vec3& WS_ViewPosition, const glm::vec3& dirLightDirection);
+	void Draw(const Scene& scene, const glm::mat4& view, const glm::mat4& projection, const glm::vec3& WS_ViewPosition, const glm::vec3& dirLightDirection, const glm::mat4 lightView, const glm::mat4 lightProj);
 	void Clear();
 	void DrawInternal(const VertexArray& va, unsigned int first, unsigned int count);
 	void DrawQuadFS();
@@ -48,10 +52,11 @@ namespace Renderer
 	Cubemap* GetCubemapTextureByID(TextureID ID);
 	Material* GetMaterialByID(MaterialID ID);
 	Shader* GetShaderByID(ShaderID ID);
+	ShaderID GetShaderIDFromMaterialProps(const MaterialProperties& props);
 
-	MaterialID CreateDefaultPhongMaterial(const glm::vec3& ambient, const glm::vec3& diffuse, const glm::vec3& specular, const float& shininess, const glm::vec3& dirLight);
+	MaterialID CreateDefaultPhongMaterial(const glm::vec3& ambient, const glm::vec3& diffuse, const glm::vec3& specular, const float& shininess);
 	MaterialID CreateNewMaterial();
-	ShaderID CreateShaderFromMaterialProperties(MaterialProperties props);
+	//ShaderID CreateShaderFromMaterialProperties(const MaterialProperties& props);
 	ShaderID CreateShaderFromPath(const char* vertPath, const char* fragmentPath);
 	void ApplyMaterial(const MaterialID& MatID, Shader* shader);
 
@@ -121,4 +126,5 @@ namespace Renderer
 	extern std::vector<Cubemap> CubemapTextures;
 	extern std::vector<Material> Materials;
 	extern std::vector<Shader> Shaders;
+	extern std::map<MaterialFeatureMask, ShaderID> MaterialFeatureToShader;
 };

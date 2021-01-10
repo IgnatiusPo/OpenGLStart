@@ -2,6 +2,7 @@
 
 #include "glm/glm.hpp"
 #include <string>
+#include "Texture.h"
 enum class UniformType
 {
 	vec1f,
@@ -13,10 +14,21 @@ enum class UniformType
 	vec3i,
 	vec4i,
 	mat3,
-	mat4
+	mat4,
+	tex
 };
 
-
+enum class TextureClass : uint16_t
+{
+	shadowmap = 0,
+	albedo,
+	specular
+};
+struct TextureUniform
+{
+	TextureID textureID;
+	TextureClass textureClass;
+};
 struct Uniform
 {
 	union {
@@ -30,7 +42,11 @@ struct Uniform
 		glm::ivec4 iv4;
 		glm::mat3 m3;
 		glm::mat4 m4;
+		TextureUniform tex;
 	};
 	std::string name;
 	UniformType type;
 };
+
+void CreateNameForTextureUniform(Uniform& uniform);
+

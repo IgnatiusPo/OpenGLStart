@@ -4,9 +4,10 @@
 #define  HEADER_BUFF_SIZE 80
 #include <vector>
 #include "VertexBufferLayout.h"
-#include "Renderer.h"
 #include "tiny_obj_loader.h"
 #include <map>
+#include <thread>
+#include "Renderer.h"
 
 void Model::AddMesh(const Mesh& mesh)
 {
@@ -30,10 +31,6 @@ void Model::SetMaterial(const MaterialID& ID)
 	}
 }
 
-void Model::SetShader(const ShaderID& ID)
-{
-	_uniteShader = ID;
-}
 
 template<>
 Model LoadModel<ModelType::STL>(std::string path)
@@ -186,9 +183,39 @@ Model LoadModel<ModelType::OBJ>(std::string path)
 	VertexBufferLayout vLayout;
 	vLayout.Push<float>(3); //position
 	vLayout.Push<float>(3); //normal
-	//todo
-	//vLayout.Push<float>(2); //texcoord
+	vLayout.Push<float>(2); //texcoord
 
+	auto CreateMaterials = [](const std::vector<tinyobj::material_t>& materials) 
+	{
+		for ( const auto& material : materials )
+		{
+			MaterialID NewMatID = Renderer::CreateNewMaterial();
+			//for test
+			//MaterialID NewMatID = Renderer::CreateDefaultPhongMaterial(glm::vec3(1.0f, 0.5f, 0.31f),
+			//	glm::vec3(1.0f, 0.5f, 0.31f), glm::vec3(0.2f, 0.2f, 0.2f), 32.f);
+
+			Material* NewMat = Renderer::GetMaterialByID(NewMatID);
+			NewMat->properties._mask |= eHasNormal;
+			NewMat->properties._mask |= eHasUV;
+			if (!material.diffuse_texname.empty())
+			{
+				NewMat->properties._mask |= eHasDiffuseTexture;
+				std::string texturePath = "res/obj/";
+				Uniform uniformTexture;
+				uniformTexture.type = UniformType::tex;
+				uniformTexture.tex.textureID = Renderer::CreateTexture(texturePath + material.diffuse_texname);
+				uniformTexture.tex.textureClass = TextureClass::albedo;
+				CreateNameForTextureUniform(uniformTexture);
+				NewMat->uniforms.push_back(uniformTexture);
+			}
+
+			//for tests
+			//NewMat->properties._mask |= eDefaultPhongModel;
+		}
+	};
+
+	MaterialID MaterialOffset = (MaterialID)Renderer::Materials.size();
+	CreateMaterials(materials);
 	for (const tinyobj::shape_t& shape : shapes) // for each shape
 	{
 		size_t index_offset = 0;
@@ -210,8 +237,7 @@ Model LoadModel<ModelType::OBJ>(std::string path)
 
 				vertex._position = *((glm::vec3*) & attrib.vertices[vIndex * 3]); // 3 real_t for position
 				vertex._normal = *((glm::vec3*) & attrib.normals[vNormal * 3]); // 3 real_t for normal
-				//todo
-				//vertex._texCoord = *((glm::vec2*) &attrib.vertices[vTexcoord * 2]); // 2 real_t for texcoord
+				vertex._texCoord = *((glm::vec2*) &attrib.texcoords[vTexcoord * 2]); // 2 real_t for texcoord
 				size_t offset = (index_offset + v) * sizeof(Vertex);
 				mat_to_vertex[matID].push_back(vertex);
 			}
@@ -226,7 +252,12 @@ Model LoadModel<ModelType::OBJ>(std::string path)
 			VertexBuffer vBuffer;
 			vBuffer.Init(vertexData.data(), (const unsigned int)vertexData.size() * sizeof(Vertex), (const unsigned int)vertexData.size() );
 			vArray.AddBuffer(vBuffer, vLayout);
-			NewModel.AddMesh(Mesh(ModelType::OBJ, std::move(vArray), std::move(vBuffer)));
+			Mesh NewMesh = Mesh(ModelType::OBJ, std::move(vArray), std::move(vBuffer));
+
+			NewMesh.SetMaterial(MaterialOffset + matID);
+			//NewMesh._shaderID = Renderer::(Renderer::GetMaterialByID(MaterialOffset + matID)->properties);
+			
+			NewModel.AddMesh(NewMesh);
 
 		}
 

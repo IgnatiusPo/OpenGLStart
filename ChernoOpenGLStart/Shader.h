@@ -41,6 +41,8 @@ public:
 	void SetUniform(const std::string& name, const glm::ivec4& uniform);
 	void SetUniform(const std::string& name, const glm::mat4& matrix);
 	void SetUniform(const std::string& name, const glm::mat3& uniform);
+	//todo maybe not here?
+	void SetUniform(const std::string& name, TextureUniform tex);
 	
 
 	void SetUniform(const Uniform& uniform);
